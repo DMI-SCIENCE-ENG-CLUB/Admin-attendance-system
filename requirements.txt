@@ -1,0 +1,12 @@
+pyzk
+SQLAlchemy
+Alembic
+APScheduler
+python-dotenv
+cryptography
+pyserial
+pandas
+reportlab
+openpyxl
+requests
+PyQt6

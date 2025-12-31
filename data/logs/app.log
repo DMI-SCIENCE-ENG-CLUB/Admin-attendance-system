@@ -1,0 +1,104 @@
+2025-12-25 22:31:34,956 - devices.identix_k20 - INFO - Connecting to K20 device at 192.168.1.198:4370
+2025-12-25 22:31:35,239 - devices.identix_k20 - INFO - Connected successfully
+2025-12-25 22:31:36,048 - devices.identix_k20 - INFO - Disconnected from K20 device
+2025-12-25 22:41:16,629 - devices.identix_k20 - INFO - Connecting to K20 device at 192.198.1.198:4370
+2025-12-25 22:41:30,177 - devices.identix_k20 - ERROR - Failed to connect to K20 device: timed out
+2025-12-25 22:41:47,269 - devices.identix_k20 - INFO - Connecting to K20 device at 192.198.1.198:4370
+2025-12-25 22:41:51,031 - devices.identix_k20 - ERROR - Failed to connect to K20 device: can't reach device (ping 192.198.1.198)
+2025-12-25 22:42:01,181 - devices.identix_k20 - INFO - Connecting to K20 device at 192.198.1.198:4370
+2025-12-25 22:42:05,031 - devices.identix_k20 - ERROR - Failed to connect to K20 device: can't reach device (ping 192.198.1.198)
+2025-12-25 22:42:15,374 - devices.identix_k20 - INFO - Connecting to K20 device at 192.198.1.198:4370
+2025-12-25 22:42:19,026 - devices.identix_k20 - ERROR - Failed to connect to K20 device: can't reach device (ping 192.198.1.198)
+2025-12-25 22:42:34,989 - devices.identix_k20 - INFO - Connecting to K20 device at 192.198.1.198:4370
+2025-12-25 22:42:38,529 - devices.identix_k20 - ERROR - Failed to connect to K20 device: can't reach device (ping 192.198.1.198)
+2025-12-25 22:42:39,805 - devices.identix_k20 - INFO - Connecting to K20 device at 192.198.1.198:4370
+2025-12-25 22:42:43,535 - devices.identix_k20 - ERROR - Failed to connect to K20 device: can't reach device (ping 192.198.1.198)
+2025-12-25 23:05:26,538 - devices.identix_k20 - INFO - Connecting to K20 device at 192.168.1.198:4370
+2025-12-25 23:05:30,524 - devices.identix_k20 - ERROR - Failed to connect to K20 device: can't reach device (ping 192.168.1.198)
+2025-12-25 23:06:42,422 - devices.identix_k20 - INFO - Connecting to K20 device at 192.168.1.198:4370
+2025-12-25 23:06:42,505 - devices.identix_k20 - INFO - Connected successfully
+2025-12-25 23:06:43,276 - devices.identix_k20 - INFO - Disconnected from K20 device
+2025-12-25 23:06:47,445 - devices.identix_k20 - INFO - Connecting to K20 device at 192.168.1.198:4370
+2025-12-25 23:06:47,545 - devices.identix_k20 - INFO - Connected successfully
+2025-12-25 23:06:48,195 - devices.identix_k20 - INFO - Disconnected from K20 device
+2025-12-25 23:07:42,993 - devices.identix_k20 - INFO - Connecting to K20 device at 192.168.1.198:4370
+2025-12-25 23:07:43,370 - devices.identix_k20 - INFO - Connected successfully
+2025-12-25 23:07:43,999 - devices.identix_k20 - INFO - Disconnected from K20 device
+2025-12-25 23:42:48,835 - database.connection - INFO - Connecting to database: sqlite:///data/timetracker.db
+2025-12-25 23:42:48,890 - database.connection - INFO - Database connection established successfully.
+2025-12-25 23:43:19,906 - database.connection - INFO - Connecting to database: sqlite:///data/timetracker.db
+2025-12-25 23:43:19,908 - database.connection - INFO - Database connection established successfully.
+2025-12-25 23:43:21,106 - database.connection - INFO - Database tables initialized.
+2025-12-25 23:43:51,584 - devices.identix_k20 - INFO - Connecting to K20 device at 192.168.1.198:4370
+2025-12-25 23:43:51,690 - devices.identix_k20 - INFO - Connected successfully
+2025-12-25 23:43:52,459 - devices.identix_k20 - INFO - Disconnected from K20 device
+2025-12-25 23:44:04,084 - devices.identix_k20 - INFO - Connecting to K20 device at 192.168.1.198:4370
+2025-12-25 23:44:04,173 - devices.identix_k20 - INFO - Connected successfully
+2025-12-25 23:44:04,821 - devices.identix_k20 - INFO - Disconnected from K20 device
+2025-12-25 23:44:27,872 - devices.identix_k20 - INFO - Connecting to K20 device at 192.168.1.198:4370
+2025-12-25 23:44:27,983 - devices.identix_k20 - INFO - Connected successfully
+2025-12-25 23:44:28,401 - devices.identix_k20 - INFO - Disconnected from K20 device
+2025-12-25 23:50:31,723 - database.connection - INFO - Connecting to database: sqlite:///data/timetracker.db
+2025-12-25 23:50:31,752 - database.connection - INFO - Database connection established successfully.
+2025-12-25 23:50:46,913 - devices.identix_k20 - INFO - Connecting to K20 device at 192.168.1.198:4370
+2025-12-25 23:50:50,531 - devices.identix_k20 - ERROR - Failed to connect to K20 device: can't reach device (ping 192.168.1.198)
+2025-12-25 23:51:44,302 - devices.identix_k20 - INFO - Connecting to K20 device at 192.168.1.198:4370
+2025-12-25 23:51:44,456 - devices.identix_k20 - INFO - Connected successfully
+2025-12-25 23:51:45,254 - devices.identix_k20 - INFO - Disconnected from K20 device
+2025-12-25 23:51:48,367 - devices.identix_k20 - INFO - Connecting to K20 device at 192.168.1.198:4370
+2025-12-25 23:51:48,495 - devices.identix_k20 - INFO - Connected successfully
+2025-12-25 23:51:49,126 - devices.identix_k20 - INFO - Disconnected from K20 device
+2025-12-25 23:58:17,775 - database.connection - INFO - Connecting to database: sqlite:///data/timetracker.db
+2025-12-25 23:58:17,807 - database.connection - INFO - Database connection established successfully.
+2025-12-26 00:02:16,808 - database.connection - INFO - Connecting to database: sqlite:///data/timetracker.db
+2025-12-26 00:02:16,843 - database.connection - INFO - Database connection established successfully.
+2025-12-26 00:08:08,586 - database.connection - INFO - Connecting to database: sqlite:///data/timetracker.db
+2025-12-26 00:08:08,611 - database.connection - INFO - Database connection established successfully.
+2025-12-26 00:08:47,458 - devices.identix_k20 - INFO - Connecting to K20 device at 192.168.1.198:4370
+2025-12-26 00:08:47,593 - devices.identix_k20 - INFO - Connected successfully
+2025-12-26 00:08:48,346 - devices.identix_k20 - INFO - Disconnected from K20 device
+2025-12-26 00:08:53,280 - devices.identix_k20 - INFO - Connecting to K20 device at 192.168.1.198:4370
+2025-12-26 00:08:53,393 - devices.identix_k20 - INFO - Connected successfully
+2025-12-26 00:08:54,043 - devices.identix_k20 - INFO - Disconnected from K20 device
+2025-12-26 00:09:15,665 - devices.identix_k20 - INFO - Connecting to K20 device at 192.168.1.198:4370
+2025-12-26 00:09:15,807 - devices.identix_k20 - INFO - Connected successfully
+2025-12-26 00:09:16,425 - devices.identix_k20 - INFO - Disconnected from K20 device
+2025-12-26 00:10:01,375 - devices.identix_k20 - INFO - Connecting to K20 device at 192.168.1.198:4370
+2025-12-26 00:10:01,487 - devices.identix_k20 - INFO - Connected successfully
+2025-12-26 00:10:01,788 - devices.identix_k20 - INFO - Disconnected from K20 device
+2025-12-26 00:13:59,553 - database.connection - INFO - Connecting to database: sqlite:///data/timetracker.db
+2025-12-26 00:13:59,577 - database.connection - INFO - Database connection established successfully.
+2025-12-26 00:14:11,791 - database.connection - INFO - Connecting to database: sqlite:///data/timetracker.db
+2025-12-26 00:14:11,792 - database.connection - INFO - Database connection established successfully.
+2025-12-26 00:14:13,651 - database.connection - INFO - Database tables initialized.
+2025-12-26 00:14:33,537 - devices.identix_k20 - INFO - Connecting to K20 device at 192.168.1.198:4370
+2025-12-26 00:14:33,662 - devices.identix_k20 - INFO - Connected successfully
+2025-12-26 00:14:34,411 - devices.identix_k20 - INFO - Disconnected from K20 device
+2025-12-26 00:14:37,407 - devices.identix_k20 - INFO - Connecting to K20 device at 192.168.1.198:4370
+2025-12-26 00:14:37,504 - devices.identix_k20 - INFO - Connected successfully
+2025-12-26 00:14:38,164 - devices.identix_k20 - INFO - Disconnected from K20 device
+2025-12-26 00:15:25,663 - devices.identix_k20 - INFO - Connecting to K20 device at 192.168.1.198:4370
+2025-12-26 00:15:25,859 - devices.identix_k20 - INFO - Connected successfully
+2025-12-26 00:15:26,465 - devices.identix_k20 - INFO - Disconnected from K20 device
+2025-12-26 19:32:47,851 - database.connection - INFO - Connecting to database: sqlite:///data/timetracker.db
+2025-12-26 19:32:48,019 - database.connection - INFO - Database connection established successfully.
+2025-12-26 19:37:26,968 - database.connection - INFO - Connecting to database: sqlite:///data/timetracker.db
+2025-12-26 19:37:26,997 - database.connection - INFO - Database connection established successfully.
+2025-12-26 19:38:02,194 - devices.identix_k20 - INFO - Connecting to K20 device at 192.168.1.198:4370
+2025-12-26 19:38:02,323 - devices.identix_k20 - INFO - Connected successfully
+2025-12-26 19:38:03,043 - devices.identix_k20 - INFO - Disconnected from K20 device
+2025-12-26 19:38:11,628 - devices.identix_k20 - INFO - Connecting to K20 device at 192.168.1.198:4370
+2025-12-26 19:38:11,745 - devices.identix_k20 - INFO - Connected successfully
+2025-12-26 19:38:12,433 - devices.identix_k20 - INFO - Disconnected from K20 device
+2025-12-26 19:38:16,038 - devices.identix_k20 - INFO - Connecting to K20 device at 192.168.1.198:4370
+2025-12-26 19:38:16,195 - devices.identix_k20 - INFO - Connected successfully
+2025-12-26 19:38:16,845 - devices.identix_k20 - INFO - Disconnected from K20 device
+2025-12-26 19:38:24,093 - database.connection - INFO - Connecting to database: sqlite:///data/timetracker.db
+2025-12-26 19:38:24,095 - database.connection - INFO - Database connection established successfully.
+2025-12-26 19:38:26,722 - database.connection - INFO - Database tables initialized.
+2025-12-26 19:38:31,286 - devices.identix_k20 - INFO - Connecting to K20 device at 192.168.1.198:4370
+2025-12-26 19:38:31,425 - devices.identix_k20 - INFO - Connected successfully
+2025-12-26 19:38:32,085 - devices.identix_k20 - INFO - Disconnected from K20 device
+2025-12-26 19:39:34,957 - devices.identix_k20 - INFO - Connecting to K20 device at 192.168.1.198:4370
+2025-12-26 19:39:35,089 - devices.identix_k20 - INFO - Connected successfully
+2025-12-26 19:39:35,778 - devices.identix_k20 - INFO - Disconnected from K20 device

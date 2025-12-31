@@ -1,7 +1,7 @@
 # E-Time Tracker Desktop System Architecture
 
 ## System Overview
-A comprehensive desktop-based time and attendance tracking system built with Python. Supports multiple biometric devices (including identiX K21), any SQL database via connection string, and provides complete shift, leave, and attendance management capabilities.
+A comprehensive desktop-based time and attendance tracking system built with Python. Supports multiple biometric devices (including identiX K20), any SQL database via connection string, and provides complete shift, leave, and attendance management capabilities.
 
 ---
 
@@ -35,7 +35,7 @@ e-time-tracker/
 ├── devices/                        # Device integration layer
 │   ├── __init__.py
 │   ├── base_adapter.py             # Abstract device interface
-│   ├── identix_k21.py              # identiX K21 adapter
+│   ├── identix_k20.py              # identiX K20 adapter
 │   ├── generic_adapter.py          # Generic device adapter
 │   ├── connection_manager.py       # Device connection handler
 │   └── protocols/                  # Communication protocols
@@ -315,7 +315,7 @@ APP_CONFIGS = {
 3. Initialize database schema
 4. Implement core services
 5. Build UI components
-6. Test with identiX K21 device
+6. Test with identiX K20 device
 7. Deploy and train users
 
 ---
