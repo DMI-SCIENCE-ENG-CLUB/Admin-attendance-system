@@ -22,8 +22,17 @@ def main():
     from config import DATABASE_CONFIGS
     db_manager.connect(DATABASE_CONFIGS['sqlite'])
 
+    from ui.login_window import LoginWindow
+    
+    login = LoginWindow()
     window = MainWindow()
-    window.show()
+    
+    def show_main():
+        login.close()
+        window.show()
+    
+    login.login_successful.connect(show_main)
+    login.show()
 
     sys.exit(app.exec())
 

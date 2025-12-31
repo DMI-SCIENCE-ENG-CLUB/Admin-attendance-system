@@ -15,7 +15,7 @@ from ui.pages import (
 class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
-        self.setWindowTitle("E-Time Tracker Pro")
+        self.setWindowTitle("DMI Admin Attendance System")
         self.setMinimumSize(1280, 800)
         
         # Load Stylesheet
@@ -74,7 +74,7 @@ class MainWindow(QMainWindow):
         layout.setSpacing(10)
         
         # Logo / Title
-        app_title = QLabel("E-Tracker")
+        app_title = QLabel("DMI Admin")
         app_title.setStyleSheet("font-size: 24px; font-weight: bold; color: #89b4fa; padding: 10px;")
         layout.addWidget(app_title)
         

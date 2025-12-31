@@ -39,11 +39,25 @@ class Employee(Base):
     last_name = Column(String(100), nullable=False)
     email = Column(String(100), unique=True)
     status = Column(Enum('active', 'inactive', 'suspended', 'terminated'), default='active')
+    contract_type = Column(Enum('permanent', 'short_contract', 'intern'), default='permanent')
     hire_date = Column(Date, nullable=False, default=datetime.utcnow().date)
     
     organization = relationship("Organization", back_populates="employees")
     department = relationship("Department", back_populates="employees")
     attendance_records = relationship("AttendanceRecord", back_populates="employee")
+    leaves = relationship("Leave", back_populates="employee")
+
+class Leave(Base):
+    __tablename__ = 'leaves'
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    employee_id = Column(Integer, ForeignKey('employees.id'), nullable=False)
+    start_date = Column(Date, nullable=False)
+    end_date = Column(Date, nullable=False)
+    leave_type = Column(Enum('vacation', 'sick', 'personal', 'other'), default='vacation')
+    status = Column(Enum('approved', 'pending', 'rejected'), default='pending')
+    reason = Column(String(255))
+    
+    employee = relationship("Employee", back_populates="leaves")
 
 class AttendanceRecord(Base):
     __tablename__ = 'attendance_records'

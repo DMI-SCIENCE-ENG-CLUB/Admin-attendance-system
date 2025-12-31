@@ -1,9 +1,9 @@
 from PyQt6.QtWidgets import (
     QWidget, QVBoxLayout, QHBoxLayout, QLabel, 
     QPushButton, QFrame, QGridLayout, QScrollArea,
-    QSizePolicy, QLineEdit, QApplication, QDialog
+    QSizePolicy, QLineEdit, QApplication, QDialog, QComboBox, QDateEdit, QMessageBox
 )
-from PyQt6.QtCore import Qt, QSize
+from PyQt6.QtCore import Qt, QSize, QDate
 from ui.widgets.attendance_table import AttendanceTable
 
 class DashboardPage(QWidget):
@@ -40,7 +40,7 @@ class DashboardPage(QWidget):
         activity_layout = QVBoxLayout(activity_frame)
         
         lbl = QLabel("Recent Activity")
-        lbl.setStyleSheet("font-size: 18px; font-weight: bold; margin-bottom: 10px;")
+        lbl.setStyleSheet("font-size: 18px; font-weight: bold; margin-bottom: 10px; color: #003366;")
         activity_layout.addWidget(lbl)
         
         # Recent Attendance Table (Preview)
@@ -54,7 +54,7 @@ class DashboardPage(QWidget):
 
     def load_dashboard_data(self):
         from database.connection import db_manager
-        from database.models import AttendanceRecord, Employee
+        from database.models import AttendanceRecord, Employee, Leave
         from datetime import datetime
         
         try:
@@ -78,7 +78,14 @@ class DashboardPage(QWidget):
             ).filter(AttendanceRecord.punch_type == 'in').distinct().count()
             self.late_card.findChild(QLabel, "StatValue").setText(str(late_today))
             
-            absent_today = max(0, total_emp - present_today)
+            # Count on leave
+            on_leave_today = session.query(Leave).filter(
+                Leave.start_date <= today,
+                Leave.end_date >= today,
+                Leave.status == 'approved'
+            ).count()
+            
+            absent_today = max(0, total_emp - present_today - on_leave_today)
             self.absent_card.findChild(QLabel, "StatValue").setText(str(absent_today))
             
             # Load recent activity
@@ -116,14 +123,87 @@ class DashboardPage(QWidget):
         
         val_lbl = QLabel(value)
         val_lbl.setObjectName("StatValue")
-        val_lbl.setStyleSheet("font-size: 28px; font-weight: bold; color: #cdd6f4;")
+        val_lbl.setStyleSheet("font-size: 28px; font-weight: bold; color: #333333;")
         layout.addWidget(val_lbl)
         
         title_lbl = QLabel(title)
-        title_lbl.setStyleSheet("color: #a6adc8; font-size: 14px;")
+        title_lbl.setStyleSheet("color: #666666; font-size: 14px;")
         layout.addWidget(title_lbl)
         
         return card
+
+class AddLeaveDialog(QDialog):
+    def __init__(self, employee_id, parent=None):
+        super().__init__(parent)
+        self.employee_id = employee_id
+        self.setWindowTitle("Grant Leave")
+        self.setFixedSize(400, 350)
+        
+        layout = QVBoxLayout(self)
+        
+        layout.addWidget(QLabel("Leave Type:"))
+        self.type_combo = QComboBox()
+        self.type_combo.addItems(["vacation", "sick", "personal", "other"])
+        layout.addWidget(self.type_combo)
+        
+        layout.addWidget(QLabel("Start Date:"))
+        self.start_date = QDateEdit()
+        self.start_date.setCalendarPopup(True)
+        self.start_date.setDate(QDate.currentDate())
+        layout.addWidget(self.start_date)
+        
+        layout.addWidget(QLabel("End Date:"))
+        self.end_date = QDateEdit()
+        self.end_date.setCalendarPopup(True)
+        self.end_date.setDate(QDate.currentDate().addDays(1))
+        layout.addWidget(self.end_date)
+        
+        layout.addWidget(QLabel("Reason:"))
+        self.reason_input = QLineEdit()
+        layout.addWidget(self.reason_input)
+        
+        btn_layout = QHBoxLayout()
+        save_btn = QPushButton("Save")
+        save_btn.setObjectName("ActionButton")
+        save_btn.clicked.connect(self.save_leave)
+        cancel_btn = QPushButton("Cancel")
+        cancel_btn.clicked.connect(self.reject)
+        
+        btn_layout.addWidget(save_btn)
+        btn_layout.addWidget(cancel_btn)
+        layout.addLayout(btn_layout)
+
+    def save_leave(self):
+        from database.connection import db_manager
+        from database.models import Leave
+        
+        start = self.start_date.date().toPyDate()
+        end = self.end_date.date().toPyDate()
+        
+        if start > end:
+            QMessageBox.warning(self, "Invalid Date", "End date must be after start date.")
+            return
+
+        try:
+            session_factory = db_manager.get_session()
+            session = session_factory()
+            
+            leave = Leave(
+                employee_id=self.employee_id,
+                start_date=start,
+                end_date=end,
+                leave_type=self.type_combo.currentText(),
+                status='approved',
+                reason=self.reason_input.text()
+            )
+            session.add(leave)
+            session.commit()
+            session.close()
+            
+            QMessageBox.information(self, "Success", "Leave granted successfully.")
+            self.accept()
+        except Exception as e:
+            QMessageBox.critical(self, "Error", str(e))
 
 class EmployeeDetailDialog(QDialog):
     def __init__(self, employee_id):
@@ -145,12 +225,18 @@ class EmployeeDetailDialog(QDialog):
         header_layout = QHBoxLayout(header)
         
         self.name_lbl = QLabel("Loading...")
-        self.name_lbl.setStyleSheet("font-size: 24px; font-weight: bold; color: #89b4fa;")
+        self.name_lbl.setStyleSheet("font-size: 24px; font-weight: bold; color: #003366;")
         header_layout.addWidget(self.name_lbl)
         header_layout.addStretch()
         
+        # Grant Leave Button
+        leave_btn = QPushButton("Grant Leave")
+        leave_btn.setObjectName("ActionButton")
+        leave_btn.clicked.connect(self.open_leave_dialog)
+        header_layout.addWidget(leave_btn)
+        
         self.id_lbl = QLabel("ID: --")
-        self.id_lbl.setStyleSheet("color: #a6adc8;")
+        self.id_lbl.setStyleSheet("color: #666666;")
         header_layout.addWidget(self.id_lbl)
         
         layout.addWidget(header)
@@ -187,6 +273,10 @@ class EmployeeDetailDialog(QDialog):
         close_btn.clicked.connect(self.close)
         layout.addWidget(close_btn, 0, Qt.AlignmentFlag.AlignRight)
 
+    def open_leave_dialog(self):
+        dialog = AddLeaveDialog(self.employee_id, self)
+        dialog.exec()
+
     def load_data(self):
         from database.connection import db_manager
         from database.models import Employee, AttendanceRecord
@@ -201,6 +291,7 @@ class EmployeeDetailDialog(QDialog):
 
             self.name_lbl.setText(f"{emp.first_name} {emp.last_name}")
             self.id_lbl.setText(f"Employee Number: {emp.employee_number}")
+            self.id_lbl.setStyleSheet("color: #666666;")
             self.dept_lbl.setText(f"Department: {emp.department.name if emp.department else 'N/A'}")
             self.status_lbl.setText(f"Status: {emp.status.capitalize()}")
             self.hire_lbl.setText(f"Hire Date: {emp.hire_date.strftime('%Y-%m-%d') if emp.hire_date else 'N/A'}")
@@ -245,6 +336,11 @@ class EmployeesPage(QWidget):
         self.search_input.setPlaceholderText("Search by name or ID...")
         self.search_input.setFixedWidth(300)
         
+        self.filter_combo = QComboBox()
+        self.filter_combo.addItems(["All Employees", "Permanent", "Short Contract", "Intern"])
+        self.filter_combo.currentTextChanged.connect(self.load_employees)
+        self.filter_combo.setFixedWidth(150)
+        
         self.sync_btn = QPushButton("Sync from Device")
         self.sync_btn.setObjectName("ActionButton")
         self.sync_btn.clicked.connect(self.sync_users)
@@ -253,6 +349,7 @@ class EmployeesPage(QWidget):
         toolbar.addWidget(self.add_btn)
         toolbar.addWidget(self.sync_btn)
         toolbar.addStretch()
+        toolbar.addWidget(self.filter_combo)
         toolbar.addWidget(self.search_input)
         layout.addLayout(toolbar)
 
@@ -285,15 +382,26 @@ class EmployeesPage(QWidget):
             session = session_factory()
             
             search_text = self.search_input.text().strip().lower()
+            filter_type = self.filter_combo.currentText()
             
-            query = session.query(Employee)
+            query = session.query(Employee).join(Department)
+            
             if search_text:
                 query = query.filter(
                     (Employee.first_name.ilike(f"%{search_text}%")) |
                     (Employee.last_name.ilike(f"%{search_text}%")) |
-                    (Employee.employee_number.ilike(f"%{search_text}%"))
+                    (Employee.employee_number.ilike(f"%{search_text}%")) |
+                    (Department.name.ilike(f"%{search_text}%"))
                 )
             
+            if filter_type != "All Employees":
+                if filter_type == "Short Contract":
+                    query = query.filter(Employee.contract_type == 'short_contract')
+                elif filter_type == "Permanent":
+                    query = query.filter(Employee.contract_type == 'permanent')
+                elif filter_type == "Intern":
+                    query = query.filter(Employee.contract_type == 'intern')
+
             employees = query.all()
             self.employee_cache = employees # Update cache for detail lookup
             
@@ -303,7 +411,7 @@ class EmployeesPage(QWidget):
                     'uid': emp.employee_number,
                     'name': f"{emp.first_name} {emp.last_name}",
                     'date': emp.department.name if emp.department else "N/A",
-                    'time': "Active", 
+                    'time': emp.contract_type.capitalize() if emp.contract_type else "N/A",  # Reuse 'time' col for Job Title/Contract
                     'type': emp.status,
                     'device': emp.hire_date.strftime('%Y-%m-%d') if emp.hire_date else "N/A",
                     'status': 'Edit'
@@ -600,7 +708,7 @@ class DevicesPage(QWidget):
         # Console/Status Output
         self.console_output = QLabel("Enter IP and click Connect to test device...")
         self.console_output.setWordWrap(True)
-        self.console_output.setStyleSheet("background-color: #181825; padding: 10px; border-radius: 6px; font-family: monospace;")
+        self.console_output.setStyleSheet("background-color: #f1f5f9; padding: 10px; border-radius: 6px; font-family: monospace; color: #333333; border: 1px solid #d1d9e6;")
         self.console_output.setAlignment(Qt.AlignmentFlag.AlignTop | Qt.AlignmentFlag.AlignLeft)
         
         layout.addWidget(self.console_output)
@@ -701,7 +809,7 @@ class ReportsPage(QWidget):
             t_lbl = QLabel(title)
             t_lbl.setStyleSheet("font-size: 16px; font-weight: bold;")
             d_lbl = QLabel(desc)
-            d_lbl.setStyleSheet("color: #a6adc8;")
+            d_lbl.setStyleSheet("color: #666666;")
             
             gen_btn = QPushButton("Generate PDF")
             gen_btn.setObjectName("ActionButton")
@@ -736,7 +844,7 @@ class DatabasesPage(QWidget):
         conn_layout.addWidget(title)
 
         desc = QLabel("Configure the SQL connection string to your database (PostgreSQL, MySQL, SQLite, etc.)")
-        desc.setStyleSheet("color: #a6adc8; margin-bottom: 15px;")
+        desc.setStyleSheet("color: #666666; margin-bottom: 15px;")
         conn_layout.addWidget(desc)
 
         title = QLabel("Database Configuration")
@@ -744,11 +852,11 @@ class DatabasesPage(QWidget):
         conn_layout.addWidget(title)
 
         desc = QLabel("The system is configured to use SQLite for local data storage.")
-        desc.setStyleSheet("color: #a6adc8; margin-bottom: 15px;")
+        desc.setStyleSheet("color: #666666; margin-bottom: 15px;")
         conn_layout.addWidget(desc)
 
         self.db_path_info = QLabel("Database Path: data/timetracker.db")
-        self.db_path_info.setStyleSheet("background-color: #11111b; padding: 10px; border-radius: 4px; color: #89b4fa;")
+        self.db_path_info.setStyleSheet("background-color: #f1f5f9; padding: 10px; border-radius: 4px; color: #003366; border: 1px solid #d1d9e6;")
         conn_layout.addWidget(self.db_path_info)
 
         btn_layout = QHBoxLayout()
@@ -767,7 +875,7 @@ class DatabasesPage(QWidget):
 
         self.status_output = QLabel("")
         self.status_output.setWordWrap(True)
-        self.status_output.setStyleSheet("padding: 10px; border-radius: 4px; background-color: #181825;")
+        self.status_output.setStyleSheet("padding: 10px; border-radius: 4px; background-color: #f1f5f9; color: #333333; border: 1px solid #d1d9e6;")
         conn_layout.addWidget(self.status_output)
 
         layout.addWidget(self.conn_frame)

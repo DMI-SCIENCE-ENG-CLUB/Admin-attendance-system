@@ -102,3 +102,25 @@
 2025-12-26 19:39:34,957 - devices.identix_k20 - INFO - Connecting to K20 device at 192.168.1.198:4370
 2025-12-26 19:39:35,089 - devices.identix_k20 - INFO - Connected successfully
 2025-12-26 19:39:35,778 - devices.identix_k20 - INFO - Disconnected from K20 device
+2025-12-31 11:49:25,601 - database.connection - INFO - Connecting to database: sqlite:///data/timetracker.db
+2025-12-31 11:49:25,712 - database.connection - INFO - Database connection established successfully.
+2025-12-31 11:54:54,553 - devices.identix_k20 - INFO - Connecting to K20 device at 1981681198:4370
+2025-12-31 11:54:58,302 - devices.identix_k20 - ERROR - Failed to connect to K20 device: can't reach device (ping 1981681198)
+2025-12-31 11:55:23,996 - devices.identix_k20 - INFO - Connecting to K20 device at 198.168.1.198:4370
+2025-12-31 11:55:27,790 - devices.identix_k20 - ERROR - Failed to connect to K20 device: can't reach device (ping 198.168.1.198)
+2025-12-31 11:55:50,633 - devices.identix_k20 - INFO - Connecting to K20 device at 192.168.1.198:4370
+2025-12-31 11:55:55,705 - devices.identix_k20 - ERROR - Failed to connect to K20 device: timed out
+2025-12-31 11:56:35,759 - devices.identix_k20 - INFO - Connecting to K20 device at 192.168.1.198:4370
+2025-12-31 11:56:40,809 - devices.identix_k20 - ERROR - Failed to connect to K20 device: timed out
+2025-12-31 11:59:00,256 - devices.identix_k20 - INFO - Connecting to K20 device at 192.168.0.2:4370
+2025-12-31 11:59:22,823 - devices.identix_k20 - ERROR - Failed to connect to K20 device: timed out
+2025-12-31 12:00:05,996 - devices.identix_k20 - INFO - Connecting to K20 device at 192.168.1.1:4370
+2025-12-31 12:00:15,100 - devices.identix_k20 - ERROR - Failed to connect to K20 device: timed out
+2025-12-31 13:21:55,354 - database.connection - INFO - Connecting to database: sqlite:///data/timetracker.db
+2025-12-31 13:21:55,468 - database.connection - INFO - Database connection established successfully.
+2025-12-31 13:26:25,283 - database.connection - INFO - Connecting to database: sqlite:///data/timetracker.db
+2025-12-31 13:26:25,347 - database.connection - INFO - Database connection established successfully.
+2025-12-31 13:42:40,433 - database.connection - INFO - Connecting to database: sqlite:///data/timetracker.db
+2025-12-31 13:42:40,464 - database.connection - INFO - Database connection established successfully.
+2025-12-31 14:07:05,291 - database.connection - INFO - Connecting to database: sqlite:///data/timetracker.db
+2025-12-31 14:07:05,330 - database.connection - INFO - Database connection established successfully.
