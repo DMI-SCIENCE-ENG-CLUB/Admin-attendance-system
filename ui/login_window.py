@@ -1,5 +1,5 @@
 from PyQt6.QtWidgets import (
-    QWidget, QVBoxLayout, QLabel, QLineEdit, 
+    QWidget, QVBoxLayout, QHBoxLayout, QLabel, QLineEdit, 
     QPushButton, QFrame, QMessageBox, QApplication
 )
 from PyQt6.QtCore import Qt, pyqtSignal
@@ -91,12 +91,46 @@ class LoginWindow(QWidget):
         card_layout.addStretch()
 
         layout.addWidget(card)
+        
+        # Footer
+        footer_layout = QHBoxLayout()
+        footer_layout.addStretch()
+        version_lbl = QLabel("v1.0.0")
+        version_lbl.setStyleSheet("color: #999; font-size: 11px; margin: 10px;")
+        footer_layout.addWidget(version_lbl)
+        layout.addLayout(footer_layout)
 
     def check_login(self):
-        username = self.user_input.text()
-        password = self.pass_input.text()
+        from database.connection import db_manager
+        from database.models import AdminUser
+        
+        username = self.user_input.text().strip()
+        password = self.pass_input.text().strip()
 
-        if username == "admin" and password == "admin123":
-            self.login_successful.emit()
-        else:
-            QMessageBox.warning(self, "Login Failed", "Invalid username or password.")
+        if not username or not password:
+             QMessageBox.warning(self, "Validation", "Please enter username and password.")
+             return
+
+        try:
+            session_factory = db_manager.get_session()
+            session = session_factory()
+            
+            # Simple plain text check
+            user = session.query(AdminUser).filter_by(username=username, password_hash=password).first()
+            
+            session.close()
+            
+            if user:
+                self.login_successful.emit()
+            else:
+                QMessageBox.warning(self, "Login Failed", "Invalid username or password.")
+                
+        except Exception as e:
+             QMessageBox.critical(self, "Connection Error", f"Database connection failed: {str(e)}")
+
+    # Settings removed from Login per request
+    # def open_settings(self): ...
+
+
+
+

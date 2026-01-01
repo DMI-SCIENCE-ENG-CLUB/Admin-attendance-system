@@ -40,7 +40,7 @@ class MainWindow(QMainWindow):
         self.dashboard_page = DashboardPage()
         self.employees_page = EmployeesPage()
         self.attendance_page = AttendancePage()
-        self.devices_page = DevicesPage()
+        # self.devices_page = DevicesPage() # Moved to Settings
         self.databases_page = DatabasesPage()
         self.reports_page = ReportsPage()
         self.settings_page = SettingsPage()
@@ -49,10 +49,10 @@ class MainWindow(QMainWindow):
         self.content_area.addWidget(self.dashboard_page)   # 0
         self.content_area.addWidget(self.employees_page)   # 1
         self.content_area.addWidget(self.attendance_page)  # 2
-        self.content_area.addWidget(self.devices_page)     # 3
-        self.content_area.addWidget(self.databases_page)   # 4
-        self.content_area.addWidget(self.reports_page)     # 5
-        self.content_area.addWidget(self.settings_page)    # 6
+        # self.content_area.addWidget(self.devices_page)     # Removed
+        self.content_area.addWidget(self.databases_page)   # 3
+        self.content_area.addWidget(self.reports_page)     # 4
+        self.content_area.addWidget(self.settings_page)    # 5
         
         # Default Selection
         self.btn_dashboard.setChecked(True)
@@ -82,20 +82,20 @@ class MainWindow(QMainWindow):
         self.btn_dashboard = self.create_nav_button("Dashboard", 0)
         self.btn_employees = self.create_nav_button("Employees", 1)
         self.btn_attendance = self.create_nav_button("Attendance", 2)
-        self.btn_devices = self.create_nav_button("Devices", 3)
-        self.btn_databases = self.create_nav_button("Databases", 4)
-        self.btn_reports = self.create_nav_button("Reports", 5)
-        self.btn_settings = self.create_nav_button("Settings", 6)
+        # self.btn_devices = self.create_nav_button("Devices", 3)
+        self.btn_databases = self.create_nav_button("Databases", 3)
+        self.btn_reports = self.create_nav_button("Reports", 4)
+        self.btn_settings = self.create_nav_button("Settings", 5)
         
         layout.addWidget(self.btn_dashboard)
         layout.addWidget(self.btn_employees)
         layout.addWidget(self.btn_attendance)
-        layout.addWidget(self.btn_devices)
+        # layout.addWidget(self.btn_devices)
         layout.addWidget(self.btn_databases)
         layout.addWidget(self.btn_reports)
+        layout.addWidget(self.btn_settings)
         
         layout.addStretch()
-        layout.addWidget(self.btn_settings)
 
         self.main_layout.addWidget(self.sidebar)
 

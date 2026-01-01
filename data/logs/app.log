@@ -124,3 +124,29 @@
 2025-12-31 13:42:40,464 - database.connection - INFO - Database connection established successfully.
 2025-12-31 14:07:05,291 - database.connection - INFO - Connecting to database: sqlite:///data/timetracker.db
 2025-12-31 14:07:05,330 - database.connection - INFO - Database connection established successfully.
+2026-01-01 02:42:06,867 - database.connection - INFO - Connecting to database: sqlite:///data/timetracker.db
+2026-01-01 02:42:06,991 - database.connection - INFO - Database connection established successfully.
+2026-01-01 02:57:42,244 - database.connection - INFO - Connecting to database: sqlite:///data/timetracker.db
+2026-01-01 02:57:42,384 - database.connection - INFO - Database connection established successfully.
+2026-01-01 03:01:26,454 - database.connection - INFO - Connecting to database: sqlite:///data/timetracker.db
+2026-01-01 03:01:26,472 - database.connection - INFO - Database connection established successfully.
+2026-01-01 03:02:00,992 - database.connection - INFO - Connecting to database: sqlite:///data/timetracker.db
+2026-01-01 03:02:01,029 - database.connection - INFO - Database connection established successfully.
+2026-01-01 03:02:56,511 - devices.identix_k20 - INFO - Connecting to K20 device at 192.168.1.198:4370
+2026-01-01 03:03:19,362 - devices.identix_k20 - ERROR - Failed to connect to K20 device: timed out
+2026-01-01 03:04:03,689 - database.connection - INFO - Connecting to database: sqlite:///data/timetracker.db
+2026-01-01 03:04:03,707 - database.connection - INFO - Database connection established successfully.
+2026-01-01 03:09:08,439 - database.connection - INFO - Connecting to database: sqlite:///data/timetracker.db
+2026-01-01 03:09:08,480 - database.connection - INFO - Database connection established successfully.
+2026-01-01 03:09:47,675 - devices.identix_k20 - INFO - Connecting to K20 device at 192.168.1.1:4370
+2026-01-01 03:09:56,804 - devices.identix_k20 - ERROR - Failed to connect to K20 device: timed out
+2026-01-01 03:11:34,143 - devices.identix_k20 - INFO - Connecting to K20 device at 192.168.1.1:4370
+2026-01-01 03:11:43,242 - devices.identix_k20 - ERROR - Failed to connect to K20 device: timed out
+2026-01-01 03:16:48,388 - database.connection - INFO - Connecting to database: sqlite:///data/timetracker.db
+2026-01-01 03:16:48,425 - database.connection - INFO - Database connection established successfully.
+2026-01-01 03:17:09,120 - database.connection - INFO - Connecting to database: sqlite:///data/timetracker.db
+2026-01-01 03:17:09,138 - database.connection - INFO - Database connection established successfully.
+2026-01-01 03:20:01,549 - database.connection - INFO - Connecting to database: sqlite:///data/timetracker.db
+2026-01-01 03:20:01,567 - database.connection - INFO - Database connection established successfully.
+2026-01-01 03:20:28,896 - devices.identix_k20 - INFO - Connecting to K20 device at 192.168.1.1:4370
+2026-01-01 03:20:37,968 - devices.identix_k20 - ERROR - Failed to connect to K20 device: timed out

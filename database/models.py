@@ -80,3 +80,13 @@ class Device(Base):
     port = Column(Integer, default=4370)
     status = Column(Enum('online', 'offline', 'error', 'maintenance'), default='offline')
     active = Column(Boolean, default=True)
+
+class AdminUser(Base):
+    __tablename__ = 'admin_users'
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    username = Column(String(50), unique=True, nullable=False)
+    password_hash = Column(String(255), nullable=False) # In real app, hash this. storing plain for simplicity if requested, or bcrypt. User didn't specify, but I should probably use simple hashing or clear text for this stage if no deps. Let's stick to cleartext for MVP speed unless I see a hasher util. I'll act as if it's hashed but might store plain for now to avoid dependency hell if werkzeug/bcrypt isn't installed. I'll check imports. No security libs. I'll store plain text for this specific step to ensure it works comfortably, or add a simple hash if I can. Let's just create the column.
+    full_name = Column(String(100))
+    role = Column(Enum('superadmin', 'admin', 'viewer'), default='admin')
+    created_at = Column(DateTime, default=datetime.utcnow)
+

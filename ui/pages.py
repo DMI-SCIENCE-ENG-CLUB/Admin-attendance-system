@@ -1,7 +1,8 @@
 from PyQt6.QtWidgets import (
     QWidget, QVBoxLayout, QHBoxLayout, QLabel, 
     QPushButton, QFrame, QGridLayout, QScrollArea,
-    QSizePolicy, QLineEdit, QApplication, QDialog, QComboBox, QDateEdit, QMessageBox
+    QSizePolicy, QLineEdit, QApplication, QDialog, QComboBox, QDateEdit, QMessageBox,
+    QTableWidget, QTableWidgetItem, QHeaderView
 )
 from PyQt6.QtCore import Qt, QSize, QDate
 from ui.widgets.attendance_table import AttendanceTable
@@ -356,7 +357,7 @@ class EmployeesPage(QWidget):
         # Employee Table
         self.table = AttendanceTable()
         self.table.setHorizontalHeaderLabels(["ID", "Name", "Department", "Job Title", "Status", "Hire Date", "Action"])
-        self.table.cellDoubleClicked.connect(self.on_row_double_clicked)
+        self.table.cellClicked.connect(self.on_row_clicked)
         
         layout.addWidget(self.table)
         layout.addStretch()
@@ -364,7 +365,7 @@ class EmployeesPage(QWidget):
         self.employee_cache = [] # Store full objects for lookup
         self.load_employees()
 
-    def on_row_double_clicked(self, row, column):
+    def on_row_clicked(self, row, column):
         emp_number = self.table.item(row, 0).text()
         # Find ID in cache
         for obj in self.employee_cache:
@@ -920,30 +921,308 @@ class SettingsPage(QWidget):
         layout = QVBoxLayout(self)
         layout.setContentsMargins(30, 30, 30, 30)
         
-        header = QLabel("General Settings")
+        header = QLabel("Settings")
         header.setObjectName("HeaderTitle")
         layout.addWidget(header)
 
-        settings_frame = QFrame()
-        settings_frame.setObjectName("Card")
-        settings_layout = QVBoxLayout(settings_frame)
+        # Scroll Area for settings
+        scroll = QScrollArea()
+        scroll.setWidgetResizable(True)
+        scroll.setFrameShape(QFrame.Shape.NoFrame)
+        scroll.setStyleSheet("background-color: transparent;")
+        
+        content_widget = QWidget()
+        content_layout = QVBoxLayout(content_widget)
+        content_layout.setSpacing(20)
 
-        # Organization Settings
-        org_label = QLabel("Organization Name")
-        org_label.setStyleSheet("font-weight: bold; margin-bottom: 5px;")
+        # --- General Settings ---
+        gen_frame = QFrame()
+        gen_frame.setObjectName("Card")
+        gen_layout = QVBoxLayout(gen_frame)
+        
+        gen_title = QLabel("General Configuration")
+        gen_title.setStyleSheet("font-size: 18px; font-weight: bold; color: #003366; margin-bottom: 10px;")
+        gen_layout.addWidget(gen_title)
+
+        org_lbl = QLabel("Organization Name")
         self.org_input = QLineEdit()
         self.org_input.setPlaceholderText("Enter organization name")
-
-        save_btn = QPushButton("Save All Settings")
+        
+        gen_layout.addWidget(org_lbl)
+        gen_layout.addWidget(self.org_input)
+        
+        save_btn = QPushButton("Save General Settings")
         save_btn.setObjectName("ActionButton")
-        save_btn.setFixedWidth(150)
+        save_btn.setFixedWidth(180)
+        
+        gen_layout.addSpacing(10)
+        gen_layout.addWidget(save_btn)
+        
+        content_layout.addWidget(gen_frame)
 
-        settings_layout.addWidget(org_label)
-        settings_layout.addWidget(self.org_input)
-        settings_layout.addSpacing(20)
-        settings_layout.addWidget(save_btn)
-        settings_layout.addStretch()
+        # --- Device Management (Moved from DevicesPage) ---
+        dev_frame = QFrame()
+        dev_frame.setObjectName("Card")
+        dev_layout = QVBoxLayout(dev_frame)
+        
+        dev_title = QLabel("Device Management")
+        dev_title.setStyleSheet("font-size: 18px; font-weight: bold; color: #003366; margin-bottom: 10px;")
+        dev_layout.addWidget(dev_title)
+        
+        # Controls
+        controls = QHBoxLayout()
+        self.ip_input = QLineEdit()
+        self.ip_input.setPlaceholderText("Device IP (e.g., 192.168.1.201)")
+        self.ip_input.setFixedWidth(200)
+        self.ip_input.setText("192.168.1.198") # Default for convenience
+        
+        self.connect_btn = QPushButton("Connect")
+        self.connect_btn.setObjectName("ActionButton")
+        self.connect_btn.clicked.connect(self.test_connection)
 
-        layout.addWidget(settings_frame)
-        layout.addStretch()
+        self.fetch_att_btn = QPushButton("Fetch Attendance")
+        self.fetch_att_btn.setObjectName("ActionButton")
+        self.fetch_att_btn.clicked.connect(self.fetch_attendance)
+        
+        controls.addWidget(self.ip_input)
+        controls.addWidget(self.connect_btn)
+        controls.addWidget(self.fetch_att_btn)
+        controls.addStretch()
+        dev_layout.addLayout(controls)
+        
+        # Status Label
+        self.connection_status_lbl = QLabel("Status: Not Connected")
+        self.connection_status_lbl.setStyleSheet("font-weight: bold; color: #666666; margin-top: 5px;")
+        dev_layout.addWidget(self.connection_status_lbl)
+
+        # Console/Status Output
+        self.console_output = QLabel("Enter IP and click Connect to test device...")
+        self.console_output.setWordWrap(True)
+        self.console_output.setStyleSheet("background-color: #f1f5f9; padding: 10px; border-radius: 6px; font-family: monospace; color: #333333; border: 1px solid #d1d9e6; margin-top: 10px;")
+        self.console_output.setAlignment(Qt.AlignmentFlag.AlignTop | Qt.AlignmentFlag.AlignLeft)
+        self.console_output.setMinimumHeight(100)
+        
+        dev_layout.addWidget(self.console_output)
+        
+        content_layout.addWidget(dev_frame)
+
+        # --- Admin User Management ---
+        admin_frame = QFrame()
+        admin_frame.setObjectName("Card")
+        admin_layout = QVBoxLayout(admin_frame)
+        
+        admin_title = QLabel("Admin Management")
+        admin_title.setStyleSheet("font-size: 18px; font-weight: bold; color: #003366; margin-bottom: 10px;")
+        admin_layout.addWidget(admin_title)
+        
+        # Add Admin Form
+        form_layout = QHBoxLayout()
+        self.new_admin_user = QLineEdit()
+        self.new_admin_user.setPlaceholderText("Username")
+        self.new_admin_pass = QLineEdit()
+        self.new_admin_pass.setPlaceholderText("Password")
+        self.new_admin_pass.setEchoMode(QLineEdit.EchoMode.Password)
+        self.new_admin_role = QComboBox()
+        self.new_admin_role.addItems(["admin", "viewer", "superadmin"])
+        
+        add_admin_btn = QPushButton("Add Admin")
+        add_admin_btn.setObjectName("ActionButton")
+        add_admin_btn.clicked.connect(self.add_admin)
+        
+        form_layout.addWidget(self.new_admin_user)
+        form_layout.addWidget(self.new_admin_pass)
+        form_layout.addWidget(self.new_admin_role)
+        form_layout.addWidget(add_admin_btn)
+        
+        admin_layout.addLayout(form_layout)
+        admin_layout.addSpacing(10)
+        
+        # Admin List
+        self.admin_list = QTableWidget()
+        self.admin_list.setColumnCount(4)
+        self.admin_list.setHorizontalHeaderLabels(["ID", "Username", "Role", "Action"])
+        self.admin_list.horizontalHeader().setSectionResizeMode(1, QHeaderView.ResizeMode.Stretch)
+        self.admin_list.setStyleSheet("min-height: 200px;")
+        
+        admin_layout.addWidget(self.admin_list)
+        
+        content_layout.addWidget(admin_frame)
+        
+        # Load initial
+        self.load_admins()
+
+        content_layout.addStretch()
+
+        scroll.setWidget(content_widget)
+        layout.addWidget(scroll)
+
+    def load_admins(self):
+        from database.connection import db_manager
+        from database.models import AdminUser
+        
+        try:
+            session_factory = db_manager.get_session()
+            session = session_factory()
+            admins = session.query(AdminUser).all()
+            
+            self.admin_list.setRowCount(0)
+            for row, admin in enumerate(admins):
+                self.admin_list.insertRow(row)
+                self.admin_list.setItem(row, 0, QTableWidgetItem(str(admin.id)))
+                self.admin_list.setItem(row, 1, QTableWidgetItem(admin.username))
+                self.admin_list.setItem(row, 2, QTableWidgetItem(admin.role))
+                
+                # Delete Button
+                if admin.username != 'admin': # Prevent deleting default superadmin
+                    del_btn = QPushButton("Delete")
+                    del_btn.setObjectName("DangerButton")
+                    del_btn.clicked.connect(lambda checked, aid=admin.id: self.delete_admin(aid))
+                    self.admin_list.setCellWidget(row, 3, del_btn)
+                else:
+                    self.admin_list.setItem(row, 3, QTableWidgetItem("Protected"))
+            
+            session.close()
+        except Exception as e:
+            print(f"Error loading admins: {e}")
+
+    def add_admin(self):
+        from database.connection import db_manager
+        from database.models import AdminUser
+        
+        user = self.new_admin_user.text().strip()
+        pwd = self.new_admin_pass.text().strip()
+        role = self.new_admin_role.currentText()
+        
+        if not user or not pwd:
+            QMessageBox.warning(self, "Validation", "Username and Password are required.")
+            return
+            
+        try:
+            session_factory = db_manager.get_session()
+            session = session_factory()
+            
+            # Check exist
+            if session.query(AdminUser).filter_by(username=user).first():
+                QMessageBox.warning(self, "Error", "Username already exists.")
+                session.close()
+                return
+                
+            new_admin = AdminUser(username=user, password_hash=pwd, role=role)
+            session.add(new_admin)
+            session.commit()
+            session.close()
+            
+            self.new_admin_user.clear()
+            self.new_admin_pass.clear()
+            self.load_admins()
+            QMessageBox.information(self, "Success", "Admin added successfully.")
+            
+        except Exception as e:
+            QMessageBox.critical(self, "Error", f"Could not add admin: {str(e)}")
+
+    def delete_admin(self, admin_id):
+        from database.connection import db_manager
+        from database.models import AdminUser
+        
+        confirm = QMessageBox.question(self, "Confirm Delete", "Are you sure you want to delete this admin?",
+                                     QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No)
+        
+        if confirm == QMessageBox.StandardButton.Yes:
+            try:
+                session_factory = db_manager.get_session()
+                session = session_factory()
+                
+                admin = session.query(AdminUser).get(admin_id)
+                if admin:
+                    session.delete(admin)
+                    session.commit()
+                
+                session.close()
+                self.load_admins()
+                
+            except Exception as e:
+                QMessageBox.critical(self, "Error", f"Deletion failed: {str(e)}")
+
+
+    def test_connection(self):
+        from devices.identix_k20 import IdentiXK20Adapter
+        
+        ip = self.ip_input.text().strip()
+        if not ip:
+            self.console_output.setText("Please enter an IP address.")
+            return
+            
+        self.console_output.setText(f"Connecting to {ip}...")
+        self.connection_status_lbl.setText("Status: Connecting...")
+        self.connection_status_lbl.setStyleSheet("font-weight: bold; color: #eab308;") # Yellow
+        QApplication.processEvents()
+        
+        try:
+            device = IdentiXK20Adapter(ip, timeout=5)
+            if device.connect():
+                info = device.get_device_info()
+                users = device.get_users()
+                device.disconnect()
+                
+                dev_name = info.get('device_name', 'Unknown Device')
+                
+                # Update Status Label
+                self.connection_status_lbl.setText(f"Status: Connected to {dev_name}")
+                self.connection_status_lbl.setStyleSheet("font-weight: bold; color: #16a34a;") # Green
+                
+                msg = f"✅ Connected successfully!\n\n"
+                msg += f"Device: {dev_name}\n"
+                msg += f"Serial: {info.get('serial', 'Unknown')}\n"
+                msg += f"Firmware: {info.get('firmware', 'Unknown')}\n"
+                msg += f"Users Found: {len(users)}"
+                
+                self.console_output.setText(msg)
+            else:
+                self.connection_status_lbl.setText("Status: Connection Failed")
+                self.connection_status_lbl.setStyleSheet("font-weight: bold; color: #dc2626;") # Red
+                self.console_output.setText("❌ Connection failed. Check IP and network.")
+        except Exception as e:
+            self.connection_status_lbl.setText("Status: Error")
+            self.connection_status_lbl.setStyleSheet("font-weight: bold; color: #dc2626;")
+            self.console_output.setText(f"❌ Error: {str(e)}")
+
+    def fetch_attendance(self):
+        from devices.identix_k20 import IdentiXK20Adapter
+
+        ip = self.ip_input.text().strip()
+        if not ip:
+            self.console_output.setText("Please enter an IP address.")
+            return
+
+        self.console_output.setText(f"Fetching attendance from {ip}...")
+        QApplication.processEvents()
+
+        try:
+            device = IdentiXK20Adapter(ip, timeout=5)
+            if device.connect():
+                records = device.get_attendance()
+                device.disconnect()
+
+                if not records:
+                    self.console_output.setText("No attendance records found.")
+                    return
+
+                msg = f"✅ Attendance fetched: {len(records)} records\n\n"
+                for rec in records[:10]:
+                    uid = getattr(rec, 'user_id', getattr(rec, 'uid', ''))
+                    ts = getattr(rec, 'timestamp', getattr(rec, 'time', ''))
+                    # Determine type simply for display
+                    p_val = getattr(rec, 'punch', 0)
+                    p_type = 'Check-In' if p_val in [0, 4] else 'Check-Out'
+                    
+                    msg += f"UID: {uid} | {ts} | {p_type}\n"
+
+                if len(records) > 10:
+                    msg += f"\n...and {len(records)-10} more records"
+
+                self.console_output.setText(msg)
+            else:
+                self.console_output.setText("❌ Connection failed. Check IP and network.")
+        except Exception as e:
+            self.console_output.setText(f"❌ Error fetching attendance: {str(e)}")
 
