@@ -150,3 +150,5 @@
 2026-01-01 03:20:01,567 - database.connection - INFO - Database connection established successfully.
 2026-01-01 03:20:28,896 - devices.identix_k20 - INFO - Connecting to K20 device at 192.168.1.1:4370
 2026-01-01 03:20:37,968 - devices.identix_k20 - ERROR - Failed to connect to K20 device: timed out
+2026-01-01 03:29:58,250 - database.connection - INFO - Connecting to database: sqlite:///data/timetracker.db
+2026-01-01 03:29:58,283 - database.connection - INFO - Database connection established successfully.
