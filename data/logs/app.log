@@ -152,3 +152,112 @@
 2026-01-01 03:20:37,968 - devices.identix_k20 - ERROR - Failed to connect to K20 device: timed out
 2026-01-01 03:29:58,250 - database.connection - INFO - Connecting to database: sqlite:///data/timetracker.db
 2026-01-01 03:29:58,283 - database.connection - INFO - Database connection established successfully.
+2026-01-01 18:00:24,273 - database.connection - INFO - Connecting to database: sqlite:///data/timetracker.db
+2026-01-01 18:00:24,419 - database.connection - INFO - Database connection established successfully.
+2026-01-01 18:01:03,171 - devices.identix_k20 - INFO - Connecting to K20 device at 192.168.1.1:4370
+2026-01-01 18:01:06,803 - devices.identix_k20 - ERROR - Failed to connect to K20 device: can't reach device (ping 192.168.1.1)
+2026-01-01 18:08:28,119 - devices.identix_k20 - INFO - Connecting to K20 device at 172.20.10.2:4370
+2026-01-01 18:08:50,879 - devices.identix_k20 - ERROR - Failed to connect to K20 device: timed out
+2026-01-01 18:09:26,559 - devices.identix_k20 - INFO - Connecting to K20 device at 172.20.100.4:4370
+2026-01-01 18:09:30,299 - devices.identix_k20 - ERROR - Failed to connect to K20 device: can't reach device (ping 172.20.100.4)
+2026-01-01 18:09:36,418 - devices.identix_k20 - INFO - Connecting to K20 device at 172.20.100.4:4370
+2026-01-01 18:09:40,295 - devices.identix_k20 - ERROR - Failed to connect to K20 device: can't reach device (ping 172.20.100.4)
+2026-01-01 18:20:59,879 - database.connection - INFO - Connecting to database: sqlite:///data/timetracker.db
+2026-01-01 18:20:59,912 - database.connection - INFO - Database connection established successfully.
+2026-01-01 18:36:15,448 - database.connection - INFO - Connecting to database: sqlite:///data/timetracker.db
+2026-01-01 18:36:15,559 - database.connection - INFO - Database connection established successfully.
+2026-01-01 18:38:08,057 - database.connection - INFO - Connecting to database: sqlite:///data/timetracker.db
+2026-01-01 18:38:08,073 - database.connection - INFO - Database connection established successfully.
+2026-01-01 18:48:14,738 - database.connection - INFO - Connecting to database: sqlite:///data/timetracker.db
+2026-01-01 18:48:14,760 - database.connection - INFO - Database connection established successfully.
+2026-01-01 18:50:56,043 - database.connection - INFO - Connecting to database: sqlite:///data/timetracker.db
+2026-01-01 18:50:56,061 - database.connection - INFO - Database connection established successfully.
+2026-01-01 19:05:48,679 - database.connection - INFO - Connecting to database: sqlite:///data/timetracker.db
+2026-01-01 19:05:48,698 - database.connection - INFO - Database connection established successfully.
+2026-01-02 08:56:07,460 - database.connection - INFO - Connecting to database: sqlite:///data/timetracker.db
+2026-01-02 08:56:07,498 - database.connection - INFO - Database connection established successfully.
+2026-01-02 09:04:57,051 - database.connection - INFO - Connecting to database: sqlite:///data/timetracker.db
+2026-01-02 09:04:57,066 - database.connection - INFO - Database connection established successfully.
+2026-01-02 09:05:13,368 - database.connection - INFO - Connecting to database: sqlite:///data/timetracker.db
+2026-01-02 09:05:13,386 - database.connection - INFO - Database connection established successfully.
+2026-01-02 09:06:05,314 - database.connection - INFO - Connecting to database: sqlite:///data/timetracker.db
+2026-01-02 09:06:05,332 - database.connection - INFO - Database connection established successfully.
+2026-01-02 09:06:12,172 - database.connection - INFO - Connecting to database: sqlite:///data/timetracker.db
+2026-01-02 09:06:12,191 - database.connection - INFO - Database connection established successfully.
+2026-01-02 09:08:20,999 - database.connection - INFO - Connecting to database: sqlite:///data/timetracker.db
+2026-01-02 09:08:21,017 - database.connection - INFO - Database connection established successfully.
+2026-01-02 09:10:13,080 - database.connection - INFO - Connecting to database: sqlite:///data/timetracker.db
+2026-01-02 09:10:13,203 - database.connection - INFO - Database connection established successfully.
+2026-01-02 09:15:18,701 - database.connection - INFO - Connecting to database: sqlite:///data/timetracker.db
+2026-01-02 09:15:18,719 - database.connection - INFO - Database connection established successfully.
+2026-01-02 09:16:26,275 - database.connection - INFO - Connecting to database: sqlite:///data/timetracker.db
+2026-01-02 09:16:26,296 - database.connection - INFO - Database connection established successfully.
+2026-01-02 09:17:24,642 - database.connection - INFO - Connecting to database: sqlite:///data/timetracker.db
+2026-01-02 09:17:24,658 - database.connection - INFO - Database connection established successfully.
+2026-01-02 09:17:24,748 - database.models - INFO - AdminUser count=2
+2026-01-02 09:17:41,253 - ui.login_window - WARNING - Login failed for 'admin'
+2026-01-02 09:17:51,714 - ui.login_window - WARNING - Login failed for 'admin'
+2026-01-02 09:17:54,186 - ui.login_window - WARNING - Login failed for 'admin'
+2026-01-02 09:19:48,507 - database.connection - INFO - Connecting to database: sqlite:///data/timetracker.db
+2026-01-02 09:19:48,526 - database.connection - INFO - Database connection established successfully.
+2026-01-02 09:19:48,553 - database.models - INFO - AdminUser count=2
+2026-01-02 09:19:58,337 - ui.login_window - WARNING - Login failed for 'admin'
+2026-01-02 09:21:36,196 - database.connection - INFO - Connecting to database: sqlite:///data/timetracker.db
+2026-01-02 09:21:36,214 - database.connection - INFO - Database connection established successfully.
+2026-01-02 09:21:36,238 - database.models - INFO - AdminUser count=2
+2026-01-02 09:21:36,239 - root - INFO - AdminUser: username='admin', password_hash='admin123'
+2026-01-02 09:21:36,239 - root - INFO - AdminUser: username='shia', password_hash='shia123'
+2026-01-02 09:21:49,100 - ui.login_window - WARNING - Login failed for 'admin'
+2026-01-02 09:21:54,859 - ui.login_window - WARNING - Login failed for 'admin'
+2026-01-02 09:23:10,677 - database.connection - INFO - Connecting to database: sqlite:///data/timetracker.db
+2026-01-02 09:23:10,694 - database.connection - INFO - Database connection established successfully.
+2026-01-02 09:23:10,720 - database.models - INFO - AdminUser count=2
+2026-01-02 09:23:10,721 - root - INFO - AdminUser: username='admin', password_hash='admin123'
+2026-01-02 09:23:10,721 - root - INFO - AdminUser: username='shia', password_hash='shia123'
+2026-01-02 09:23:17,660 - ui.login_window - WARNING - Login failed for 'admin'
+2026-01-02 09:24:41,865 - database.connection - INFO - Connecting to database: sqlite:///data/timetracker.db
+2026-01-02 09:24:41,881 - database.connection - INFO - Database connection established successfully.
+2026-01-02 09:24:41,881 - root - ERROR - Error rebuilding database: cannot import name 'engine' from 'database.connection' (c:\Users\User\Documents\projects\Admin-attendance-system\database\connection.py)
+Traceback (most recent call last):
+  File "c:\Users\User\Documents\projects\Admin-attendance-system\main.py", line 40, in main
+    from database.connection import Base, engine
+ImportError: cannot import name 'engine' from 'database.connection' (c:\Users\User\Documents\projects\Admin-attendance-system\database\connection.py)
+2026-01-02 09:24:41,905 - database.models - INFO - AdminUser count=2
+2026-01-02 09:24:41,907 - root - INFO - AdminUser: username='admin', password_hash='admin123'
+2026-01-02 09:24:41,907 - root - INFO - AdminUser: username='shia', password_hash='shia123'
+2026-01-02 09:24:46,917 - ui.login_window - WARNING - Login failed for 'admin'
+2026-01-02 09:31:21,849 - database.connection - INFO - Connecting to database: sqlite:///data/timetracker.db
+2026-01-02 09:31:21,866 - database.connection - INFO - Database connection established successfully.
+2026-01-02 09:31:21,866 - root - ERROR - Error rebuilding database: cannot import name 'engine' from 'database.connection' (c:\Users\User\Documents\projects\Admin-attendance-system\database\connection.py)
+Traceback (most recent call last):
+  File "c:\Users\User\Documents\projects\Admin-attendance-system\main.py", line 40, in main
+    from database.connection import Base, engine
+ImportError: cannot import name 'engine' from 'database.connection' (c:\Users\User\Documents\projects\Admin-attendance-system\database\connection.py)
+2026-01-02 09:31:21,913 - database.models - INFO - AdminUser count=2
+2026-01-02 09:31:21,914 - root - INFO - AdminUser: username='admin', password_hash='admin123'
+2026-01-02 09:31:21,914 - root - INFO - AdminUser: username='shia', password_hash='shia123'
+2026-01-02 09:31:32,384 - ui.login_window - WARNING - Login failed for 'admin'
+2026-01-02 09:33:24,512 - database.connection - INFO - Connecting to database: sqlite:///data/timetracker.db
+2026-01-02 09:33:24,530 - database.connection - INFO - Database connection established successfully.
+2026-01-02 09:33:24,531 - root - ERROR - Error rebuilding database: cannot import name 'engine' from 'database.connection' (c:\Users\User\Documents\projects\Admin-attendance-system\database\connection.py)
+Traceback (most recent call last):
+  File "c:\Users\User\Documents\projects\Admin-attendance-system\main.py", line 40, in main
+    from database.connection import Base, engine
+ImportError: cannot import name 'engine' from 'database.connection' (c:\Users\User\Documents\projects\Admin-attendance-system\database\connection.py)
+2026-01-02 09:33:24,557 - database.models - INFO - AdminUser count=2
+2026-01-02 09:33:24,558 - root - INFO - AdminUser: username='admin', password_hash='admin123'
+2026-01-02 09:33:24,558 - root - INFO - AdminUser: username='shia', password_hash='shia123'
+2026-01-02 09:33:36,642 - ui.login_window - WARNING - Login failed for 'admin'
+2026-01-02 09:33:41,919 - ui.login_window - WARNING - Login failed for 'admin'
+2026-01-02 09:33:48,547 - ui.login_window - WARNING - Login failed for 'admin'
+2026-01-02 09:42:00,988 - database.connection - INFO - Connecting to database: sqlite:///data/timetracker.db
+2026-01-02 09:42:01,008 - database.connection - INFO - Database connection established successfully.
+2026-01-02 09:42:01,009 - root - ERROR - Error rebuilding database: cannot import name 'engine' from 'database.connection' (c:\Users\User\Documents\projects\Admin-attendance-system\database\connection.py)
+Traceback (most recent call last):
+  File "c:\Users\User\Documents\projects\Admin-attendance-system\main.py", line 40, in main
+    from database.connection import Base, engine
+ImportError: cannot import name 'engine' from 'database.connection' (c:\Users\User\Documents\projects\Admin-attendance-system\database\connection.py)
+2026-01-02 09:42:01,043 - database.models - INFO - AdminUser count=2
+2026-01-02 09:42:01,044 - root - INFO - AdminUser: username='admin', password_hash='240be518fabd2724ddb6f04eeb1da5967448d7e831c08c8fa822809f74c720a9'
+2026-01-02 09:42:01,044 - root - INFO - AdminUser: username='shia', password_hash='22dc69febd4387844e7c4ff6ded34565d0ae4cb30439f19f36ffba4ce30e0cc0'
+2026-01-02 09:42:12,315 - ui.login_window - INFO - Login successful for 'admin'

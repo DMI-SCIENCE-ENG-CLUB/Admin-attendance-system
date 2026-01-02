@@ -57,7 +57,9 @@ def migrate():
             # Seed default admin
             res = conn.execute(text("SELECT count(*) FROM admin_users WHERE username='admin'"))
             if res.scalar() == 0:
-                conn.execute(text("INSERT INTO admin_users (username, password_hash, role) VALUES ('admin', 'admin123', 'superadmin')"))
+                import hashlib
+                pw_hash = hashlib.sha256("admin123".encode("utf-8")).hexdigest()
+                conn.execute(text("INSERT INTO admin_users (username, password_hash, role) VALUES ('admin', :pw, 'superadmin')"), {"pw": pw_hash})
                 print("Default admin user created.")
             else:
                 print("Default admin user already exists.")

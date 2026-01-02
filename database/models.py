@@ -1,8 +1,11 @@
-
 from sqlalchemy import Column, Integer, String, Boolean, DateTime, ForeignKey, Enum, Text, BIGINT, Float, Date, Time, DECIMAL
 from sqlalchemy.orm import relationship
 from datetime import datetime
 from database.connection import Base
+import hashlib
+import logging
+
+logger = logging.getLogger(__name__)
 
 class Organization(Base):
     __tablename__ = 'organizations'
@@ -85,8 +88,43 @@ class AdminUser(Base):
     __tablename__ = 'admin_users'
     id = Column(Integer, primary_key=True, autoincrement=True)
     username = Column(String(50), unique=True, nullable=False)
-    password_hash = Column(String(255), nullable=False) # In real app, hash this. storing plain for simplicity if requested, or bcrypt. User didn't specify, but I should probably use simple hashing or clear text for this stage if no deps. Let's stick to cleartext for MVP speed unless I see a hasher util. I'll act as if it's hashed but might store plain for now to avoid dependency hell if werkzeug/bcrypt isn't installed. I'll check imports. No security libs. I'll store plain text for this specific step to ensure it works comfortably, or add a simple hash if I can. Let's just create the column.
+    password_hash = Column(String(255), nullable=False)
     full_name = Column(String(100))
     role = Column(Enum('superadmin', 'admin', 'viewer'), default='admin')
     created_at = Column(DateTime, default=datetime.utcnow)
+
+def ensure_default_admin(session_factory_or_session):
+    """
+    Ensure at least one admin exists. If none, create default:
+    username: admin, password: admin123 (stored as sha256 hex).
+    Accepts either a session factory (callable returning a session) or a session instance.
+    """
+    import hashlib
+    created = False
+    # obtain a session object
+    if callable(session_factory_or_session):
+        session = session_factory_or_session()
+        close_after = True
+    else:
+        session = session_factory_or_session
+        close_after = False
+    try:
+        count = session.query(AdminUser).count()
+        logger.info("AdminUser count=%d", count)
+        if count == 0:
+            pw_hash = hashlib.sha256("admin123".encode("utf-8")).hexdigest()
+            admin = AdminUser(username="admin", password_hash=pw_hash, full_name="Administrator", role="superadmin")
+            session.add(admin)
+            session.commit()
+            created = True
+            logger.info("Default admin created (username=admin).")
+    except Exception as e:
+        logger.exception("Failed to ensure default admin: %s", e)
+    finally:
+        if close_after:
+            try:
+                session.close()
+            except Exception:
+                pass
+    return created
 

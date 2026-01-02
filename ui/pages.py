@@ -431,7 +431,7 @@ class EmployeesPage(QWidget):
         from database.models import Employee, Organization, Department
         from PyQt6.QtWidgets import QMessageBox
 
-        default_ip = "192.168.1.198" 
+        default_ip = "192.168.1.1" 
         
         self.sync_btn.setEnabled(False)
         self.sync_btn.setText("Syncing...")
@@ -576,7 +576,7 @@ class AttendancePage(QWidget):
         from database.models import AttendanceRecord, Employee, Organization, Department
         from datetime import datetime
 
-        default_ip = "192.168.1.198" 
+        default_ip = "192.168.1.1" 
         
         self.refresh_btn.setEnabled(False)
         self.refresh_btn.setText("Refreshing...")
@@ -919,103 +919,62 @@ class SettingsPage(QWidget):
     def __init__(self):
         super().__init__()
         layout = QVBoxLayout(self)
-        layout.setContentsMargins(30, 30, 30, 30)
-        
+        layout.setContentsMargins(24, 24, 24, 24)
+        layout.setSpacing(16)
+
         header = QLabel("Settings")
         header.setObjectName("HeaderTitle")
         layout.addWidget(header)
 
-        # Scroll Area for settings
+        # Scroll Area for settings (keeps page responsive)
         scroll = QScrollArea()
         scroll.setWidgetResizable(True)
         scroll.setFrameShape(QFrame.Shape.NoFrame)
-        scroll.setStyleSheet("background-color: transparent;")
-        
+
         content_widget = QWidget()
-        content_layout = QVBoxLayout(content_widget)
+        # Use a two column layout: left for general/admin, right for device/db
+        content_layout = QHBoxLayout(content_widget)
         content_layout.setSpacing(20)
 
-        # --- General Settings ---
+        # Left column
+        left_col = QVBoxLayout()
+        left_col.setSpacing(20)
+
+        # General Card
         gen_frame = QFrame()
         gen_frame.setObjectName("Card")
         gen_layout = QVBoxLayout(gen_frame)
-        
+        gen_layout.setContentsMargins(16, 16, 16, 16)
         gen_title = QLabel("General Configuration")
-        gen_title.setStyleSheet("font-size: 18px; font-weight: bold; color: #003366; margin-bottom: 10px;")
+        gen_title.setStyleSheet("font-size: 16px; font-weight: bold; color: #042743;")
         gen_layout.addWidget(gen_title)
+        gen_layout.addSpacing(6)
 
         org_lbl = QLabel("Organization Name")
+        org_lbl.setStyleSheet("color: #334155;")
         self.org_input = QLineEdit()
         self.org_input.setPlaceholderText("Enter organization name")
-        
+        self.org_input.setFixedWidth(360)
         gen_layout.addWidget(org_lbl)
         gen_layout.addWidget(self.org_input)
-        
+
         save_btn = QPushButton("Save General Settings")
         save_btn.setObjectName("ActionButton")
-        save_btn.setFixedWidth(180)
-        
-        gen_layout.addSpacing(10)
+        save_btn.setFixedWidth(200)
+        gen_layout.addSpacing(8)
         gen_layout.addWidget(save_btn)
-        
-        content_layout.addWidget(gen_frame)
+        left_col.addWidget(gen_frame)
 
-        # --- Device Management (Moved from DevicesPage) ---
-        dev_frame = QFrame()
-        dev_frame.setObjectName("Card")
-        dev_layout = QVBoxLayout(dev_frame)
-        
-        dev_title = QLabel("Device Management")
-        dev_title.setStyleSheet("font-size: 18px; font-weight: bold; color: #003366; margin-bottom: 10px;")
-        dev_layout.addWidget(dev_title)
-        
-        # Controls
-        controls = QHBoxLayout()
-        self.ip_input = QLineEdit()
-        self.ip_input.setPlaceholderText("Device IP (e.g., 192.168.1.201)")
-        self.ip_input.setFixedWidth(200)
-        self.ip_input.setText("192.168.1.198") # Default for convenience
-        
-        self.connect_btn = QPushButton("Connect")
-        self.connect_btn.setObjectName("ActionButton")
-        self.connect_btn.clicked.connect(self.test_connection)
-
-        self.fetch_att_btn = QPushButton("Fetch Attendance")
-        self.fetch_att_btn.setObjectName("ActionButton")
-        self.fetch_att_btn.clicked.connect(self.fetch_attendance)
-        
-        controls.addWidget(self.ip_input)
-        controls.addWidget(self.connect_btn)
-        controls.addWidget(self.fetch_att_btn)
-        controls.addStretch()
-        dev_layout.addLayout(controls)
-        
-        # Status Label
-        self.connection_status_lbl = QLabel("Status: Not Connected")
-        self.connection_status_lbl.setStyleSheet("font-weight: bold; color: #666666; margin-top: 5px;")
-        dev_layout.addWidget(self.connection_status_lbl)
-
-        # Console/Status Output
-        self.console_output = QLabel("Enter IP and click Connect to test device...")
-        self.console_output.setWordWrap(True)
-        self.console_output.setStyleSheet("background-color: #f1f5f9; padding: 10px; border-radius: 6px; font-family: monospace; color: #333333; border: 1px solid #d1d9e6; margin-top: 10px;")
-        self.console_output.setAlignment(Qt.AlignmentFlag.AlignTop | Qt.AlignmentFlag.AlignLeft)
-        self.console_output.setMinimumHeight(100)
-        
-        dev_layout.addWidget(self.console_output)
-        
-        content_layout.addWidget(dev_frame)
-
-        # --- Admin User Management ---
+        # Admin Card
         admin_frame = QFrame()
         admin_frame.setObjectName("Card")
         admin_layout = QVBoxLayout(admin_frame)
-        
-        admin_title = QLabel("Admin Management")
-        admin_title.setStyleSheet("font-size: 18px; font-weight: bold; color: #003366; margin-bottom: 10px;")
+        admin_layout.setContentsMargins(16, 16, 16, 16)
+        admin_title = QLabel("Admin Users")
+        admin_title.setStyleSheet("font-size: 16px; font-weight: bold; color: #042743;")
         admin_layout.addWidget(admin_title)
-        
-        # Add Admin Form
+        admin_layout.addSpacing(6)
+
         form_layout = QHBoxLayout()
         self.new_admin_user = QLineEdit()
         self.new_admin_user.setPlaceholderText("Username")
@@ -1024,37 +983,125 @@ class SettingsPage(QWidget):
         self.new_admin_pass.setEchoMode(QLineEdit.EchoMode.Password)
         self.new_admin_role = QComboBox()
         self.new_admin_role.addItems(["admin", "viewer", "superadmin"])
-        
+
         add_admin_btn = QPushButton("Add Admin")
         add_admin_btn.setObjectName("ActionButton")
         add_admin_btn.clicked.connect(self.add_admin)
-        
+
         form_layout.addWidget(self.new_admin_user)
         form_layout.addWidget(self.new_admin_pass)
         form_layout.addWidget(self.new_admin_role)
         form_layout.addWidget(add_admin_btn)
-        
         admin_layout.addLayout(form_layout)
         admin_layout.addSpacing(10)
-        
-        # Admin List
+
         self.admin_list = QTableWidget()
         self.admin_list.setColumnCount(4)
         self.admin_list.setHorizontalHeaderLabels(["ID", "Username", "Role", "Action"])
         self.admin_list.horizontalHeader().setSectionResizeMode(1, QHeaderView.ResizeMode.Stretch)
-        self.admin_list.setStyleSheet("min-height: 200px;")
-        
-        admin_layout.addWidget(self.admin_list)
-        
-        content_layout.addWidget(admin_frame)
-        
-        # Load initial
-        self.load_admins()
+        # Improve table readability and size
+        self.admin_list.setAlternatingRowColors(True)
+        self.admin_list.setMinimumHeight(300)
+        self.admin_list.verticalHeader().setDefaultSectionSize(42)
+        self.admin_list.setSelectionBehavior(QTableWidget.SelectionBehavior.SelectRows)
+        self.admin_list.setSelectionMode(QTableWidget.SelectionMode.SingleSelection)
+        # Column sizing for clarity
+        try:
+            self.admin_list.setColumnWidth(0, 70)
+            self.admin_list.setColumnWidth(2, 160)
+            self.admin_list.setColumnWidth(3, 140)
+        except Exception:
+            pass
 
-        content_layout.addStretch()
+        # Local styling for clearer buttons and cells
+        self.admin_list.setStyleSheet("""
+            QTableWidget { background-color: #ffffff; color: #0f172a; border: none; }
+            QTableWidget::item { padding: 8px; }
+            QHeaderView::section { background-color: #042743; color: #ffffff; padding: 8px; }
+        """)
+
+        admin_layout.addWidget(self.admin_list)
+
+        left_col.addWidget(admin_frame)
+        left_col.addStretch()
+
+        # Right column
+        right_col = QVBoxLayout()
+        right_col.setSpacing(20)
+
+        # Device Card
+        dev_frame = QFrame()
+        dev_frame.setObjectName("Card")
+        dev_layout = QVBoxLayout(dev_frame)
+        dev_layout.setContentsMargins(16, 16, 16, 16)
+        dev_title = QLabel("Device Management")
+        dev_title.setStyleSheet("font-size: 16px; font-weight: bold; color: #042743;")
+        dev_layout.addWidget(dev_title)
+        dev_layout.addSpacing(6)
+
+        controls = QHBoxLayout()
+        self.ip_input = QLineEdit()
+        self.ip_input.setPlaceholderText("Device IP (e.g., 192.168.1.201)")
+        self.ip_input.setFixedWidth(220)
+        self.ip_input.setText("192.168.1.1")
+
+        self.connect_btn = QPushButton("Connect")
+        self.connect_btn.setObjectName("ActionButton")
+        self.connect_btn.clicked.connect(self.test_connection)
+
+        self.fetch_att_btn = QPushButton("Fetch Attendance")
+        self.fetch_att_btn.setObjectName("ActionButton")
+        self.fetch_att_btn.clicked.connect(self.fetch_attendance)
+
+        controls.addWidget(self.ip_input)
+        controls.addWidget(self.connect_btn)
+        controls.addWidget(self.fetch_att_btn)
+        controls.addStretch()
+        dev_layout.addLayout(controls)
+
+        self.connection_status_lbl = QLabel("Status: Not Connected")
+        self.connection_status_lbl.setStyleSheet("font-weight: bold; color: #475569;")
+        dev_layout.addWidget(self.connection_status_lbl)
+
+        self.console_output = QLabel("Enter IP and click Connect to test device...")
+        self.console_output.setWordWrap(True)
+        self.console_output.setStyleSheet("background-color: #f8fafc; padding: 10px; border-radius: 6px; font-family: monospace; color: #0f172a; border: 1px solid #e6eef8;")
+        self.console_output.setAlignment(Qt.AlignmentFlag.AlignTop | Qt.AlignmentFlag.AlignLeft)
+        self.console_output.setMinimumHeight(160)
+        dev_layout.addWidget(self.console_output)
+
+        right_col.addWidget(dev_frame)
+
+        # Database / Utility Card
+        db_frame = QFrame()
+        db_frame.setObjectName("Card")
+        db_layout = QVBoxLayout(db_frame)
+        db_layout.setContentsMargins(16, 16, 16, 16)
+        db_title = QLabel("Database & Utilities")
+        db_title.setStyleSheet("font-size: 16px; font-weight: bold; color: #042743;")
+        db_layout.addWidget(db_title)
+        db_layout.addSpacing(8)
+
+        self.init_db_btn = QPushButton("Initialize Database")
+        self.init_db_btn.setObjectName("ActionButton")
+        db_layout.addWidget(self.init_db_btn)
+
+        self.status_output = QLabel("")
+        self.status_output.setWordWrap(True)
+        self.status_output.setStyleSheet("padding: 8px; border-radius: 6px; background-color: #ffffff; color: #0f172a; border: 1px solid #e6eef8;")
+        db_layout.addWidget(self.status_output)
+
+        right_col.addWidget(db_frame)
+        right_col.addStretch()
+
+        content_layout.addLayout(left_col, 2)
+        content_layout.addLayout(right_col, 1)
 
         scroll.setWidget(content_widget)
         layout.addWidget(scroll)
+
+        # Load initial data
+        self.load_admins()
 
     def load_admins(self):
         from database.connection import db_manager
@@ -1076,10 +1123,14 @@ class SettingsPage(QWidget):
                 if admin.username != 'admin': # Prevent deleting default superadmin
                     del_btn = QPushButton("Delete")
                     del_btn.setObjectName("DangerButton")
+                    del_btn.setFixedWidth(110)
                     del_btn.clicked.connect(lambda checked, aid=admin.id: self.delete_admin(aid))
+                    # Ensure the button is visible and aligned
                     self.admin_list.setCellWidget(row, 3, del_btn)
                 else:
-                    self.admin_list.setItem(row, 3, QTableWidgetItem("Protected"))
+                    item = QTableWidgetItem("Protected")
+                    item.setTextAlignment(Qt.AlignmentFlag.AlignCenter.value)
+                    self.admin_list.setItem(row, 3, item)
             
             session.close()
         except Exception as e:
