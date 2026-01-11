@@ -951,6 +951,7 @@ class SettingsPage(QWidget):
         
         # Load Data
         self.load_admins()
+        self.load_general_settings()
 
     def setup_general_tab(self):
         tab = QWidget()
@@ -985,6 +986,7 @@ class SettingsPage(QWidget):
         save_btn = QPushButton("Save Changes")
         save_btn.setObjectName("ActionButton")
         save_btn.setFixedWidth(150)
+        save_btn.clicked.connect(self.save_general_settings)
         g_layout.addWidget(save_btn, 0, Qt.AlignmentFlag.AlignRight)
         
         layout.addWidget(grp)
@@ -1155,6 +1157,29 @@ class SettingsPage(QWidget):
             session.close()
         except Exception as e:
             print(f"Error loading admins: {e}")
+
+    def load_general_settings(self):
+        import json
+        import os
+        settings_file = os.path.join(os.path.dirname(__file__), '..', 'settings.json')
+        if os.path.exists(settings_file):
+            with open(settings_file, 'r') as f:
+                settings = json.load(f)
+                self.org_input.setText(settings.get('organization_name', ''))
+
+    def save_general_settings(self):
+        import json
+        import os
+        org_name = self.org_input.text().strip()
+        settings_file = os.path.join(os.path.dirname(__file__), '..', 'settings.json')
+        settings = {}
+        if os.path.exists(settings_file):
+            with open(settings_file, 'r') as f:
+                settings = json.load(f)
+        settings['organization_name'] = org_name
+        with open(settings_file, 'w') as f:
+            json.dump(settings, f, indent=4)
+        QMessageBox.information(self, "Saved", "General settings saved successfully.")
 
     def add_admin(self):
         from database.connection import db_manager
