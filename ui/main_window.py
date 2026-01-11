@@ -9,14 +9,14 @@ import os
 
 from ui.pages import (
     DashboardPage, EmployeesPage, AttendancePage, 
-    DevicesPage, DatabasesPage, ReportsPage, SettingsPage
+    DevicesPage, ReportsPage, SettingsPage
 )
 
 class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
         self.setWindowTitle("DMI Admin Attendance System")
-        self.setMinimumSize(1280, 800)
+        self.setMinimumSize(1024, 700)
         
         # Load Stylesheet
         self.load_stylesheet()
@@ -41,7 +41,7 @@ class MainWindow(QMainWindow):
         self.employees_page = EmployeesPage()
         self.attendance_page = AttendancePage()
         # self.devices_page = DevicesPage() # Moved to Settings
-        self.databases_page = DatabasesPage()
+        # self.databases_page = DatabasesPage() # Moved to Settings
         self.reports_page = ReportsPage()
         self.settings_page = SettingsPage()
         
@@ -50,7 +50,7 @@ class MainWindow(QMainWindow):
         self.content_area.addWidget(self.employees_page)   # 1
         self.content_area.addWidget(self.attendance_page)  # 2
         # self.content_area.addWidget(self.devices_page)     # Removed
-        self.content_area.addWidget(self.databases_page)   # 3
+        # self.content_area.addWidget(self.databases_page)   # 3
         self.content_area.addWidget(self.reports_page)     # 4
         self.content_area.addWidget(self.settings_page)    # 5
         
@@ -83,15 +83,15 @@ class MainWindow(QMainWindow):
         self.btn_employees = self.create_nav_button("Employees", 1)
         self.btn_attendance = self.create_nav_button("Attendance", 2)
         # self.btn_devices = self.create_nav_button("Devices", 3)
-        self.btn_databases = self.create_nav_button("Databases", 3)
-        self.btn_reports = self.create_nav_button("Reports", 4)
-        self.btn_settings = self.create_nav_button("Settings", 5)
+        # self.btn_databases = self.create_nav_button("Databases", 3)
+        self.btn_reports = self.create_nav_button("Reports", 3)
+        self.btn_settings = self.create_nav_button("Settings", 4)
         
         layout.addWidget(self.btn_dashboard)
         layout.addWidget(self.btn_employees)
         layout.addWidget(self.btn_attendance)
         # layout.addWidget(self.btn_devices)
-        layout.addWidget(self.btn_databases)
+        # layout.addWidget(self.btn_databases)
         layout.addWidget(self.btn_reports)
         layout.addWidget(self.btn_settings)
         

@@ -261,3 +261,51 @@ ImportError: cannot import name 'engine' from 'database.connection' (c:\Users\Us
 2026-01-02 09:42:01,044 - root - INFO - AdminUser: username='admin', password_hash='240be518fabd2724ddb6f04eeb1da5967448d7e831c08c8fa822809f74c720a9'
 2026-01-02 09:42:01,044 - root - INFO - AdminUser: username='shia', password_hash='22dc69febd4387844e7c4ff6ded34565d0ae4cb30439f19f36ffba4ce30e0cc0'
 2026-01-02 09:42:12,315 - ui.login_window - INFO - Login successful for 'admin'
+2026-01-11 21:07:51,595 - database.connection - INFO - Connecting to database: sqlite:///data/timetracker.db
+2026-01-11 21:07:51,611 - database.connection - INFO - Database connection established successfully.
+2026-01-11 21:07:51,611 - root - ERROR - Error rebuilding database: cannot import name 'engine' from 'database.connection' (/home/ghost/projects/Admin-attendance-system/database/connection.py)
+Traceback (most recent call last):
+  File "/home/ghost/projects/Admin-attendance-system/main.py", line 40, in main
+    from database.connection import Base, engine
+ImportError: cannot import name 'engine' from 'database.connection' (/home/ghost/projects/Admin-attendance-system/database/connection.py)
+2026-01-11 21:07:51,650 - database.models - INFO - AdminUser count=2
+2026-01-11 21:07:51,651 - root - INFO - AdminUser: username='admin', password_hash='240be518fabd2724ddb6f04eeb1da5967448d7e831c08c8fa822809f74c720a9'
+2026-01-11 21:07:51,651 - root - INFO - AdminUser: username='shia', password_hash='22dc69febd4387844e7c4ff6ded34565d0ae4cb30439f19f36ffba4ce30e0cc0'
+2026-01-11 21:08:57,335 - ui.login_window - INFO - Login successful for 'shia'
+2026-01-11 21:18:04,459 - database.connection - INFO - Connecting to database: sqlite:///data/timetracker.db
+2026-01-11 21:18:04,470 - database.connection - INFO - Database connection established successfully.
+2026-01-11 21:18:04,470 - root - ERROR - Error rebuilding database: cannot import name 'engine' from 'database.connection' (/home/ghost/projects/Admin-attendance-system/database/connection.py)
+Traceback (most recent call last):
+  File "/home/ghost/projects/Admin-attendance-system/main.py", line 40, in main
+    from database.connection import Base, engine
+ImportError: cannot import name 'engine' from 'database.connection' (/home/ghost/projects/Admin-attendance-system/database/connection.py)
+2026-01-11 21:18:04,507 - database.models - INFO - AdminUser count=2
+2026-01-11 21:18:04,508 - root - INFO - AdminUser: username='admin', password_hash='240be518fabd2724ddb6f04eeb1da5967448d7e831c08c8fa822809f74c720a9'
+2026-01-11 21:18:04,509 - root - INFO - AdminUser: username='shia', password_hash='22dc69febd4387844e7c4ff6ded34565d0ae4cb30439f19f36ffba4ce30e0cc0'
+2026-01-11 21:18:10,013 - ui.login_window - INFO - Login successful for 'shia'
+2026-01-11 21:26:22,063 - database.connection - INFO - Connecting to database: sqlite:///data/timetracker.db
+2026-01-11 21:26:22,078 - database.connection - INFO - Database connection established successfully.
+2026-01-11 21:26:22,078 - root - ERROR - Error rebuilding database: cannot import name 'engine' from 'database.connection' (/home/ghost/projects/Admin-attendance-system/database/connection.py)
+Traceback (most recent call last):
+  File "/home/ghost/projects/Admin-attendance-system/main.py", line 41, in main
+    from database.connection import Base, engine
+ImportError: cannot import name 'engine' from 'database.connection' (/home/ghost/projects/Admin-attendance-system/database/connection.py)
+2026-01-11 21:26:22,117 - database.models - INFO - AdminUser count=2
+2026-01-11 21:26:22,119 - root - INFO - AdminUser: username='admin', password_hash='240be518fabd2724ddb6f04eeb1da5967448d7e831c08c8fa822809f74c720a9'
+2026-01-11 21:26:22,119 - root - INFO - AdminUser: username='shia', password_hash='22dc69febd4387844e7c4ff6ded34565d0ae4cb30439f19f36ffba4ce30e0cc0'
+2026-01-11 21:26:27,664 - ui.login_window - INFO - Login successful for 'shia'
+2026-01-11 21:32:38,299 - database.connection - INFO - Connecting to database: sqlite:///data/timetracker.db
+2026-01-11 21:32:38,310 - database.connection - INFO - Database connection established successfully.
+2026-01-11 21:32:38,310 - root - ERROR - Error rebuilding database: cannot import name 'engine' from 'database.connection' (/home/ghost/projects/Admin-attendance-system/database/connection.py)
+Traceback (most recent call last):
+  File "/home/ghost/projects/Admin-attendance-system/main.py", line 41, in main
+    from database.connection import Base, engine
+ImportError: cannot import name 'engine' from 'database.connection' (/home/ghost/projects/Admin-attendance-system/database/connection.py)
+2026-01-11 21:32:38,349 - database.models - INFO - AdminUser count=2
+2026-01-11 21:32:38,350 - root - INFO - AdminUser: username='admin', password_hash='240be518fabd2724ddb6f04eeb1da5967448d7e831c08c8fa822809f74c720a9'
+2026-01-11 21:32:38,350 - root - INFO - AdminUser: username='shia', password_hash='22dc69febd4387844e7c4ff6ded34565d0ae4cb30439f19f36ffba4ce30e0cc0'
+2026-01-11 21:32:49,015 - ui.login_window - INFO - Login successful for 'shia'
+2026-01-11 21:33:39,571 - database.connection - INFO - Connecting to database: sqlite:///data/timetracker.db
+2026-01-11 21:33:39,574 - database.connection - INFO - Database connection established successfully.
+2026-01-11 21:33:45,113 - devices.identix_k20 - INFO - Connecting to K20 device at 192.168.1.201:4370
+2026-01-11 21:33:50,124 - devices.identix_k20 - ERROR - Failed to connect to K20 device: can't reach device (ping 192.168.1.201)

@@ -29,6 +29,7 @@ logging.basicConfig(
 def main():
     app = QApplication(sys.argv)
     # app.setStyle("Fusion") # Good baseline for custom styling
+    # app.setStyle("Fusion") # Better cross-platform look
     app.setStyle("Windows")
 
     from database.connection import db_manager
@@ -65,7 +66,7 @@ def main():
     def open_main():
         if main_win['instance'] is None:
             main_win['instance'] = MainWindow()
-        main_win['instance'].show()
+        main_win['instance'].showMaximized()
         login.close()
 
     login.login_successful.connect(open_main)
