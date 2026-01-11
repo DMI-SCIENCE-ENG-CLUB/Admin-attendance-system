@@ -1,15 +1,25 @@
 """
 Quick Device Connection Test
-Automatically tests connection to device at 192.168.1.1
+Automatically tests connection to device at configured IP
 """
 
 import socket
 import subprocess
 import sys
 from devices.identix_k20 import IdentiXK20Adapter
+import json
+import os
+
+# Load IP from settings
+settings_file = os.path.join(os.path.dirname(__file__), 'settings.json')
+if os.path.exists(settings_file):
+    with open(settings_file, 'r') as f:
+        settings = json.load(f)
+        DEVICE_IP = settings.get('device_ip', '192.168.1.1')
+else:
+    DEVICE_IP = '192.168.1.1'
 
 # Configuration
-DEVICE_IP = "192.168.1.1"
 DEVICE_PORT = 4370
 TIMEOUT = 10
 

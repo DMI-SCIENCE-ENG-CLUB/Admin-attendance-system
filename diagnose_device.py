@@ -132,7 +132,15 @@ def main():
     print("="*60)
     
     # Get IP address from user
-    default_ip = "192.168.1.1"
+    import json
+    import os
+    settings_file = os.path.join(os.path.dirname(__file__), 'settings.json')
+    if os.path.exists(settings_file):
+        with open(settings_file, 'r') as f:
+            settings = json.load(f)
+            default_ip = settings.get('device_ip', '192.168.1.1')
+    else:
+        default_ip = '192.168.1.1'
     ip_input = input(f"\nEnter device IP address (press Enter for {default_ip}): ").strip()
     ip_address = ip_input if ip_input else default_ip
     

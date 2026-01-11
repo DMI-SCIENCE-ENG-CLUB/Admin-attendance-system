@@ -3,12 +3,26 @@ import logging
 import sys
 from devices.identix_k20 import IdentiXK20Adapter
 from config import DEVICE_CONFIGS
+import json
+import os
 
 # Configure logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
 
-def test_connection(ip='192.168.1.198'):
+def load_device_ip():
+    settings_file = os.path.join(os.path.dirname(__file__), 'settings.json')
+    if os.path.exists(settings_file):
+        with open(settings_file, 'r') as f:
+            settings = json.load(f)
+            return settings.get('device_ip', '192.168.1.198')
+    return '192.168.1.198'
+
+def test_connection(ip=None):
+    if ip is None:
+        ip = load_device_ip()
+    logger.info(f"Attempting to connect to K20 at {ip}...")
+    device = IdentiXK20Adapter(ip)
     logger.info(f"Attempting to connect to K20 at {ip}...")
     device = IdentiXK20Adapter(ip)
     
@@ -42,5 +56,4 @@ if __name__ == "__main__":
         ip_addr = sys.argv[1]
         test_connection(ip_addr)
     else:
-        # Default IP from previous app.py
-        test_connection('192.168.1.198')
+        test_connection()

@@ -3,7 +3,8 @@ from PyQt6.QtWidgets import (
     QPushButton, QFrame, QStackedWidget, QLabel, QApplication
 )
 from PyQt6.QtCore import Qt, QSize
-from PyQt6.QtGui import QIcon
+from PyQt6.QtGui import QIcon, QPalette, QColor
+from PyQt6.QtWidgets import QStyleFactory
 import sys
 import os
 
@@ -17,6 +18,26 @@ class MainWindow(QMainWindow):
         super().__init__()
         self.setWindowTitle("DMI Admin Attendance System")
         self.setMinimumSize(1024, 700)
+        
+        # Set application style and palette for consistent light theme
+        app = QApplication.instance()
+        if app:
+            app.setStyle(QStyleFactory.create("Fusion"))
+            palette = QPalette()
+            palette.setColor(QPalette.ColorRole.Window, QColor(248, 250, 252))  # Light background
+            palette.setColor(QPalette.ColorRole.WindowText, QColor(34, 34, 34))  # Dark text
+            palette.setColor(QPalette.ColorRole.Base, QColor(255, 255, 255))  # White base
+            palette.setColor(QPalette.ColorRole.AlternateBase, QColor(248, 250, 252))
+            palette.setColor(QPalette.ColorRole.ToolTipBase, QColor(255, 255, 255))
+            palette.setColor(QPalette.ColorRole.ToolTipText, QColor(34, 34, 34))
+            palette.setColor(QPalette.ColorRole.Text, QColor(34, 34, 34))
+            palette.setColor(QPalette.ColorRole.Button, QColor(255, 255, 255))
+            palette.setColor(QPalette.ColorRole.ButtonText, QColor(34, 34, 34))
+            palette.setColor(QPalette.ColorRole.BrightText, QColor(255, 255, 255))
+            palette.setColor(QPalette.ColorRole.Link, QColor(0, 122, 204))
+            palette.setColor(QPalette.ColorRole.Highlight, QColor(207, 238, 253))
+            palette.setColor(QPalette.ColorRole.HighlightedText, QColor(4, 39, 67))
+            app.setPalette(palette)
         
         # Load Stylesheet
         self.load_stylesheet()

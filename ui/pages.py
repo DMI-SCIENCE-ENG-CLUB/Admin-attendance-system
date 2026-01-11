@@ -2,10 +2,12 @@ from PyQt6.QtWidgets import (
     QWidget, QVBoxLayout, QHBoxLayout, QLabel, 
     QPushButton, QFrame, QGridLayout, QScrollArea,
     QSizePolicy, QLineEdit, QApplication, QDialog, QComboBox, QDateEdit, QMessageBox,
-    QTableWidget, QTableWidgetItem, QHeaderView, QTabWidget
+    QTableWidget, QTableWidgetItem, QHeaderView, QTabWidget, QCheckBox
 )
 from PyQt6.QtCore import Qt, QSize, QDate
 from ui.widgets.attendance_table import AttendanceTable
+import json
+import os
 
 class DashboardPage(QWidget):
     def __init__(self):
@@ -431,7 +433,14 @@ class EmployeesPage(QWidget):
         from database.models import Employee, Organization, Department
         from PyQt6.QtWidgets import QMessageBox
 
-        default_ip = "192.168.1.1" 
+        # Load IP from settings
+        settings_file = os.path.join(os.path.dirname(__file__), '..', 'settings.json')
+        if os.path.exists(settings_file):
+            with open(settings_file, 'r') as f:
+                settings = json.load(f)
+                default_ip = settings.get('device_ip', '192.168.1.1')
+        else:
+            default_ip = '192.168.1.1'
         
         self.sync_btn.setEnabled(False)
         self.sync_btn.setText("Syncing...")
@@ -511,13 +520,19 @@ class AttendancePage(QWidget):
 
         # Filters
         filters = QHBoxLayout()
-        self.date_filter = QLineEdit()
-        self.date_filter.setPlaceholderText("Filter by Date (YYYY-MM-DD)")
+        self.filter_checkbox = QCheckBox("Filter by Date:")
+        self.filter_checkbox.setChecked(False)
+        self.filter_checkbox.stateChanged.connect(self.on_filter_changed)
+        self.date_filter = QDateEdit()
+        self.date_filter.setCalendarPopup(True)
+        self.date_filter.setDate(QDate.currentDate())
+        self.date_filter.dateChanged.connect(self.load_from_db)
         self.refresh_btn = QPushButton("Refresh Records")
         self.refresh_btn.setObjectName("ActionButton")
         
         self.refresh_btn.clicked.connect(self.refresh_attendance)
         
+        filters.addWidget(self.filter_checkbox)
         filters.addWidget(self.date_filter)
         filters.addWidget(self.refresh_btn)
         filters.addStretch()
@@ -539,18 +554,17 @@ class AttendancePage(QWidget):
             session_factory = db_manager.get_session()
             session = session_factory()
             
-            filter_date = self.date_filter.text().strip()
-            
             query = session.query(AttendanceRecord).join(Employee)
-            # Add filtering if needed, but for now just load all
             records = query.order_by(AttendanceRecord.punch_time.desc()).all()
             
             formatted_data = []
             for rec in records:
                 date_str = rec.punch_time.strftime('%Y-%m-%d')
                 
-                if filter_date and filter_date != date_str:
-                    continue
+                if self.filter_checkbox.isChecked():
+                    selected_date = self.date_filter.date().toString("yyyy-MM-dd")
+                    if selected_date != date_str:
+                        continue
                     
                 formatted_data.append({
                     'uid': rec.employee.employee_number,
@@ -569,6 +583,10 @@ class AttendancePage(QWidget):
             if 'session' in locals():
                 session.close()
 
+    def on_filter_changed(self):
+        self.date_filter.setEnabled(self.filter_checkbox.isChecked())
+        self.load_from_db()
+
     def refresh_attendance(self):
         from devices.identix_k20 import IdentiXK20Adapter
         from PyQt6.QtWidgets import QMessageBox
@@ -576,7 +594,14 @@ class AttendancePage(QWidget):
         from database.models import AttendanceRecord, Employee, Organization, Department
         from datetime import datetime
 
-        default_ip = "192.168.1.1" 
+        # Load IP from settings
+        settings_file = os.path.join(os.path.dirname(__file__), '..', 'settings.json')
+        if os.path.exists(settings_file):
+            with open(settings_file, 'r') as f:
+                settings = json.load(f)
+                default_ip = settings.get('device_ip', '192.168.1.1')
+        else:
+            default_ip = '192.168.1.1'
         
         self.refresh_btn.setEnabled(False)
         self.refresh_btn.setText("Refreshing...")
@@ -1027,7 +1052,14 @@ class SettingsPage(QWidget):
         controls = QHBoxLayout()
         self.dev_ip_input = QLineEdit()
         self.dev_ip_input.setPlaceholderText("Device IP (192.168.1.201)")
-        self.dev_ip_input.setText("192.168.1.201")
+        # Load IP from settings
+        settings_file = os.path.join(os.path.dirname(__file__), '..', 'settings.json')
+        if os.path.exists(settings_file):
+            with open(settings_file, 'r') as f:
+                settings = json.load(f)
+                self.dev_ip_input.setText(settings.get('device_ip', '192.168.1.201'))
+        else:
+            self.dev_ip_input.setText("192.168.1.201")
         
         conn_btn = QPushButton("Connect & Test")
         conn_btn.setObjectName("ActionButton")
@@ -1178,6 +1210,16 @@ class SettingsPage(QWidget):
         try:
             dev = IdentiXK20Adapter(ip, timeout=5)
             if dev.connect():
+                # Save the IP to settings since connection succeeded
+                settings_file = os.path.join(os.path.dirname(__file__), '..', 'settings.json')
+                settings = {}
+                if os.path.exists(settings_file):
+                    with open(settings_file, 'r') as f:
+                        settings = json.load(f)
+                settings['device_ip'] = ip
+                with open(settings_file, 'w') as f:
+                    json.dump(settings, f, indent=4)
+                
                 self.dev_status_lbl.setText("Status: Connected")
                 self.dev_status_lbl.setStyleSheet("font-weight: bold; color: #22c55e;")
                 info = dev.get_device_info()
