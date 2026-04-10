@@ -91,19 +91,9 @@ class DashboardPage(QWidget):
             absent_today = max(0, total_emp - present_today - on_leave_today)
             self.absent_card.findChild(QLabel, "StatValue").setText(str(absent_today))
             
-            # Load recent activity
-            records = session.query(AttendanceRecord).order_by(AttendanceRecord.punch_time.desc()).limit(10).all()
-            formatted_data = []
-            for rec in records:
-                formatted_data.append({
-                    'uid': rec.employee.employee_number,
-                    'name': f"{rec.employee.first_name} {rec.employee.last_name}",
-                    'date': rec.punch_time.strftime('%Y-%m-%d'),
-                    'time': rec.punch_time.strftime('%H:%M:%S'),
-                    'type': 'Check-In' if rec.punch_type == 'in' else 'Check-Out',
-                    'device': f"Device {rec.device_id}",
-                    'status': rec.status
-                })
+            # Load recent activity and aggregate by employee/date
+            records = session.query(AttendanceRecord).order_by(AttendanceRecord.punch_time.desc()).limit(50).all()
+            formatted_data = AttendanceTable.aggregate_attendance_rows(records)[:10]
             self.table.load_data(formatted_data)
             
         except Exception as e:
@@ -302,17 +292,7 @@ class EmployeeDetailDialog(QDialog):
 
             # Attendance
             records = session.query(AttendanceRecord).filter_by(employee_id=emp.id).order_by(AttendanceRecord.punch_time.desc()).all()
-            formatted_data = []
-            for rec in records:
-                formatted_data.append({
-                    'uid': emp.employee_number,
-                    'name': f"{emp.first_name} {emp.last_name}",
-                    'date': rec.punch_time.strftime('%Y-%m-%d'),
-                    'time': rec.punch_time.strftime('%H:%M:%S'),
-                    'type': 'Check-In' if rec.punch_type == 'in' else 'Check-Out',
-                    'device': f"Device {rec.device_id}",
-                    'status': rec.status
-                })
+            formatted_data = AttendanceTable.aggregate_attendance_rows(records)
             self.table.load_data(formatted_data)
             
         except Exception as e:
@@ -557,25 +537,11 @@ class AttendancePage(QWidget):
             query = session.query(AttendanceRecord).join(Employee)
             records = query.order_by(AttendanceRecord.punch_time.desc()).all()
             
-            formatted_data = []
-            for rec in records:
-                date_str = rec.punch_time.strftime('%Y-%m-%d')
-                
-                if self.filter_checkbox.isChecked():
-                    selected_date = self.date_filter.date().toString("yyyy-MM-dd")
-                    if selected_date != date_str:
-                        continue
-                    
-                formatted_data.append({
-                    'uid': rec.employee.employee_number,
-                    'name': f"{rec.employee.first_name} {rec.employee.last_name}",
-                    'date': date_str,
-                    'time': rec.punch_time.strftime('%H:%M:%S'),
-                    'type': 'Check-In' if rec.punch_type == 'in' else 'Check-Out',
-                    'device': f"Device {rec.device_id}",
-                    'status': rec.status
-                })
-            
+            if self.filter_checkbox.isChecked():
+                selected_date = self.date_filter.date().toString("yyyy-MM-dd")
+                records = [rec for rec in records if rec.punch_time.strftime('%Y-%m-%d') == selected_date]
+
+            formatted_data = AttendanceTable.aggregate_attendance_rows(records)
             self.table.load_data(formatted_data)
         except Exception as e:
             print(f"Error loading from DB: {e}")
@@ -821,7 +787,9 @@ class ReportsPage(QWidget):
         report_grid.setSpacing(20)
 
         reports = [
-            ("Daily Attendance Report", "Summary of late/absent employees for today"),
+            ("Daily Attendance Report", "Summary of today\'s attendance with check-in, check-out and hours"),
+            ("Weekly Attendance Report", "Weekly attendance summary with check-in, check-out and hours"),
+            ("Monthly Attendance Report", "Monthly attendance summary with check-in, check-out and hours"),
             ("Monthly Leave Summary", "Overview of leave balances and types"),
             ("Employee Working Hours", "Detailed breakdown of payroll hours"),
             ("Device Sync Logs", "History of device communication and errors")
@@ -858,7 +826,8 @@ class ReportsPage(QWidget):
         from reportlab.lib.styles import getSampleStyleSheet
         from database.connection import db_manager
         from database.models import AttendanceRecord, Employee
-        from datetime import datetime
+        from datetime import datetime, timedelta
+        import calendar
         import os
 
         # Ensure directory exists
@@ -880,18 +849,98 @@ class ReportsPage(QWidget):
             # Data Fetching Logic (Stubified for now based on report type)
             session = db_manager.get_session()()
             
+            def build_attendance_rows(records):
+                summary = {}
+                for rec in records:
+                    employee_number = getattr(rec.employee, 'employee_number', '')
+                    employee_name = f"{getattr(rec.employee, 'first_name', '')} {getattr(rec.employee, 'last_name', '')}".strip()
+                    attendance_date = rec.punch_time.date()
+                    key = (employee_number, attendance_date)
+
+                    entry = summary.get(key)
+                    if entry is None:
+                        entry = {
+                            'uid': employee_number,
+                            'name': employee_name,
+                            'date': attendance_date.strftime('%Y-%m-%d'),
+                            'check_in': '',
+                            'check_out': '',
+                            'device': f"Device {rec.device_id}" if rec.device_id is not None else '',
+                            'status': rec.status,
+                            '_earliest_in': None,
+                            '_latest_out': None,
+                            '_latest_time': rec.punch_time,
+                        }
+                        summary[key] = entry
+
+                    if rec.punch_type == 'in':
+                        if entry['_earliest_in'] is None or rec.punch_time < entry['_earliest_in']:
+                            entry['_earliest_in'] = rec.punch_time
+                            entry['check_in'] = rec.punch_time.strftime('%H:%M:%S')
+                    elif rec.punch_type == 'out':
+                        if entry['_latest_out'] is None or rec.punch_time > entry['_latest_out']:
+                            entry['_latest_out'] = rec.punch_time
+                            entry['check_out'] = rec.punch_time.strftime('%H:%M:%S')
+
+                    if rec.punch_time > entry['_latest_time']:
+                        entry['_latest_time'] = rec.punch_time
+                        entry['device'] = f"Device {rec.device_id}" if rec.device_id is not None else entry['device']
+                        entry['status'] = rec.status or entry['status']
+
+                rows = []
+                for entry in sorted(summary.values(), key=lambda item: (item['date'], item['name'])):
+                    if entry['_earliest_in'] and entry['_latest_out']:
+                        duration = entry['_latest_out'] - entry['_earliest_in']
+                        hours = round(duration.total_seconds() / 3600, 2)
+                        entry['hours'] = f"{hours:.2f}"
+                    else:
+                        entry['hours'] = ''
+                    rows.append(entry)
+                return rows
+
             data = []
             if "Daily Attendance" in report_type:
-                data = [["ID", "Name", "Time", "Type", "Status"]]
-                records = session.query(AttendanceRecord).join(Employee).order_by(AttendanceRecord.punch_time.desc()).limit(50).all()
-                for rec in records:
-                    data.append([
-                        rec.employee.employee_number, 
-                        f"{rec.employee.first_name} {rec.employee.last_name}",
-                        rec.punch_time.strftime('%H:%M:%S'),
-                        rec.punch_type,
-                        rec.status
-                    ])
+                today = datetime.now().date()
+                start_dt = datetime.combine(today, datetime.min.time())
+                end_dt = datetime.combine(today, datetime.max.time())
+                data = [["ID", "Name", "Date", "Check In", "Check Out", "Hours", "Status"]]
+                records = session.query(AttendanceRecord).join(Employee).filter(
+                    AttendanceRecord.punch_time >= start_dt,
+                    AttendanceRecord.punch_time <= end_dt
+                ).order_by(AttendanceRecord.punch_time.asc()).all()
+                for row in build_attendance_rows(records):
+                    data.append([row['uid'], row['name'], row['date'], row['check_in'], row['check_out'], row['hours'], row['status']])
+            elif "Weekly Attendance" in report_type:
+                today = datetime.now().date()
+                start_date = today - timedelta(days=today.weekday())
+                end_date = start_date + timedelta(days=6)
+                start_dt = datetime.combine(start_date, datetime.min.time())
+                end_dt = datetime.combine(end_date, datetime.max.time())
+                elements.append(Paragraph(f"Week: {start_date.strftime('%Y-%m-%d')} to {end_date.strftime('%Y-%m-%d')}", styles['Normal']))
+                elements.append(Spacer(1, 10))
+                data = [["ID", "Name", "Date", "Check In", "Check Out", "Hours", "Status"]]
+                records = session.query(AttendanceRecord).join(Employee).filter(
+                    AttendanceRecord.punch_time >= start_dt,
+                    AttendanceRecord.punch_time <= end_dt
+                ).order_by(AttendanceRecord.punch_time.asc()).all()
+                for row in build_attendance_rows(records):
+                    data.append([row['uid'], row['name'], row['date'], row['check_in'], row['check_out'], row['hours'], row['status']])
+            elif "Monthly Attendance" in report_type:
+                today = datetime.now().date()
+                start_date = today.replace(day=1)
+                last_day = calendar.monthrange(today.year, today.month)[1]
+                end_date = today.replace(day=last_day)
+                start_dt = datetime.combine(start_date, datetime.min.time())
+                end_dt = datetime.combine(end_date, datetime.max.time())
+                elements.append(Paragraph(f"Month: {today.strftime('%B %Y')}", styles['Normal']))
+                elements.append(Spacer(1, 10))
+                data = [["ID", "Name", "Date", "Check In", "Check Out", "Hours", "Status"]]
+                records = session.query(AttendanceRecord).join(Employee).filter(
+                    AttendanceRecord.punch_time >= start_dt,
+                    AttendanceRecord.punch_time <= end_dt
+                ).order_by(AttendanceRecord.punch_time.asc()).all()
+                for row in build_attendance_rows(records):
+                    data.append([row['uid'], row['name'], row['date'], row['check_in'], row['check_out'], row['hours'], row['status']])
             elif "Leave" in report_type:
                 data = [["ID", "Name", "Leave Type", "Date", "Status"]]
                 # Stub data
